@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Алексей Захарчук</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="light-source" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <span class="author-name">Алексей Захарчук</span>
+      <div class="header-divider" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- Левая панель: список заголовков -->
+    <aside class="sidebar" id="sidebar" aria-label="Список стихотворений">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Стихотворения</h2>
+        <div class="sidebar-divider" aria-hidden="true"></div>
+      </div>
+      <nav class="poem-list" id="poemList" role="navigation" aria-label="Стихотворения">
+        <div class="poem-list-loading">Загрузка…</div>
+      </nav>
+    </aside>
+
+    <!-- Правая панель: текст стихотворения -->
+    <section class="content-panel" id="contentPanel" aria-live="polite" aria-label="Текст стихотворения">
+      <div class="poem-display" id="poemDisplay">
+        <div class="poem-placeholder">
+          <p>Выберите стихотворение из списка слева</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Мобильная кнопка возврата к списку -->
+    <button class="back-btn" id="backBtn" aria-label="Вернуться к списку стихотворений" hidden>
+      &#8592; Список
+    </button>
+
+  </main>
+
+  <footer class="site-footer">
+    <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
