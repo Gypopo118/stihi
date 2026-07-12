@@ -252,13 +252,13 @@ body::before {
 .poem-body {
   font-family: var(--font-poem);
   font-size: 1.13rem;
-  line-height: 1.95;
+  line-height: 1.6;
   color: var(--text-poem);
   white-space: pre-wrap;
 }
 
 .poem-body p {
-  margin-bottom: 1.4em;
+  margin-bottom: 0.8em;
 }
 .poem-inner {
   max-width: 62ch;
