@@ -7,17 +7,13 @@
   --bg-panel: rgba(30, 29, 26, 0.72);
   --bg-panel-hover: rgba(38, 37, 33, 0.85);
   --border-color: rgba(210, 190, 140, 0.18);
-  --border-glow: rgba(210, 190, 140, 0.35);
   --gold: #c8a96e;
   --gold-dim: #8a7048;
   --gold-bright: #e2c98a;
-  --text-main: #d8cdb8;
+  --text-main: #ffffff;
   --text-dim: #8a8070;
-  --text-poem: #ccc3b0;
+  --text-poem: #ffffff;
   --accent-visited: #6a8060;
-  --accent-active: #c8a96e;
-  --light-x: 0px;
-  --light-y: 0px;
   --font-display: 'Cormorant SC', serif;
   --font-body: 'Cormorant Garamond', serif;
   --font-poem: 'EB Garamond', serif;
@@ -42,7 +38,7 @@ body {
   position: relative;
 }
 
-/* ===== LIGHT SOURCE (top-left warm glow) ===== */
+/* ===== LIGHT SOURCE ===== */
 .light-source {
   pointer-events: none;
   position: fixed;
@@ -76,7 +72,7 @@ body::before {
 .site-header {
   position: relative;
   z-index: 10;
-  padding: 1.4rem 2.5rem 0;
+  padding: 1.4rem 2.5rem 0.8rem;
   text-align: right;
 }
 
@@ -84,20 +80,17 @@ body::before {
   display: inline-block;
 }
 
+/* "Алексей Захарчук" — мелкий шрифт, без подчёркивания */
 .author-name {
   font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-size: 0.78rem;
   font-weight: 300;
-  letter-spacing: 0.12em;
-  color: var(--text-main);
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
   text-transform: uppercase;
-}
-
-.header-divider {
-  margin: 0.4rem 0 0 auto;
-  width: 60%;
-  height: 1px;
-  background: linear-gradient(to left, transparent, var(--gold-dim));
+  text-decoration: none;
+  border: none;
+  outline: none;
 }
 
 /* ===== MAIN LAYOUT ===== */
@@ -107,7 +100,7 @@ body::before {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
   gap: 1.5rem;
-  padding: 1.2rem 2rem 1.5rem;
+  padding: 0.6rem 2rem 1.5rem;
   min-height: calc(100vh - 120px);
   align-items: start;
 }
@@ -115,15 +108,14 @@ body::before {
 /* ===== SIDEBAR ===== */
 .sidebar {
   position: sticky;
-  top: 1.2rem;
-  height: calc(100vh - 140px);
+  top: 0.6rem;
+  height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
   background: var(--bg-panel);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
   overflow: hidden;
-  /* Gradient border effect from top-left light */
   box-shadow:
     -1px -1px 0 rgba(200, 169, 110, 0.22),
     inset 0 0 40px rgba(0,0,0,0.15);
@@ -134,6 +126,7 @@ body::before {
   flex-shrink: 0;
 }
 
+/* "Стихи" — тот же стиль что у имени автора */
 .sidebar-title {
   font-family: var(--font-display);
   font-size: 0.78rem;
@@ -164,7 +157,6 @@ body::before {
 .poem-list::-webkit-scrollbar-thumb {
   background: var(--gold-dim);
   border-radius: 4px;
-  opacity: 0.5;
 }
 
 .poem-list-loading {
@@ -227,7 +219,7 @@ body::before {
   background: var(--bg-panel);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  min-height: calc(100vh - 140px);
+  min-height: calc(100vh - 100px);
   padding: 2.5rem 3.5rem;
   overflow-y: auto;
   box-shadow:
@@ -301,84 +293,23 @@ body::before {
   letter-spacing: 0.06em;
 }
 
-/* ===== BACK BUTTON (mobile) ===== */
-.back-btn {
-  display: none;
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 100;
-  background: var(--bg-panel);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: var(--gold);
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  padding: 0.4rem 0.9rem;
-  cursor: pointer;
-  transition: background var(--transition);
+/* ===== TRANSITIONS ===== */
+.poem-display {
+  animation: fadeIn 0.35s ease;
 }
 
-.back-btn:hover {
-  background: var(--bg-panel-hover);
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
-  .layout {
-    display: block;
-    padding: 0.8rem 0.8rem 1rem;
-    position: relative;
-  }
 
-  .sidebar {
-    position: fixed;
-    inset: 0;
+  /* На мобильном весь экран — один из двух видов: список или стихотворение */
+  body {
+    overflow: hidden;
     height: 100dvh;
-    border-radius: 0;
-    border: none;
-    z-index: 50;
-    display: flex;
-    transition: transform 0.3s ease;
-  }
-
-  .sidebar.hidden-mobile {
-    transform: translateX(-100%);
-  }
-
-  .content-panel {
-    position: fixed;
-    inset: 0;
-    min-height: 100dvh;
-    border-radius: 0;
-    border: none;
-    padding: 4rem 1.4rem 2rem;
-    display: none;
-    z-index: 40;
-  }
-
-  .content-panel.visible-mobile {
-    display: block;
-  }
-
-  .back-btn {
-    display: block;
-  }
-
-  .back-btn[hidden] {
-    display: none;
-  }
-
-  .poem-title {
-    font-size: 1.5rem;
-  }
-
-  .poem-body {
-    font-size: 1.05rem;
-  }
-
-  .site-header {
-    padding: 1rem 1.2rem 0;
   }
 
   .light-source {
@@ -387,14 +318,79 @@ body::before {
     top: -80px;
     left: -80px;
   }
-}
 
-/* ===== TRANSITIONS FOR POEM LOAD ===== */
-.poem-display {
-  animation: fadeIn 0.35s ease;
-}
+  /* Шапка с именем — часть панели списка, не отдельный блок */
+  .site-header {
+    position: relative;
+    padding: 1.2rem 1.4rem 0.8rem;
+    text-align: right;
+    z-index: 1;
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  /* Footer тоже внутри панели списка */
+  .site-footer {
+    position: relative;
+    z-index: 1;
+  }
+
+  .layout {
+    display: block;
+    padding: 0;
+    min-height: unset;
+  }
+
+  /* Панель списка: занимает весь экран */
+  .sidebar {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+  }
+
+  /* Скрыть панель списка при открытом стихе */
+  .sidebar.hidden-mobile {
+    transform: translateX(-100%);
+  }
+
+  /* Панель стихотворения: занимает весь экран */
+  .content-panel {
+    position: fixed;
+    inset: 0;
+    height: 100dvh;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    padding: 1.4rem 1.4rem 2rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: none;
+    z-index: 10;
+    min-height: unset;
+  }
+
+  .content-panel.visible-mobile {
+    display: block;
+  }
+
+  /* Шапка и футер — скрыты вне панели списка */
+  .site-header.hidden-mobile,
+  .site-footer.hidden-mobile {
+    display: none;
+  }
+
+  .poem-title {
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .poem-body {
+    font-size: 1.05rem;
+  }
 }
