@@ -242,8 +242,7 @@ body::before {
   letter-spacing: 0.04em;
   color: var(--gold);
   text-align: left;
-  max-width: 62ch;
-  margin: 0 auto 0.4rem;
+  margin-bottom: 0.4rem;
 }
 
 .poem-title-divider {
@@ -256,12 +255,14 @@ body::before {
   line-height: 1.95;
   color: var(--text-poem);
   white-space: pre-wrap;
-  max-width: 62ch;
-  margin: 0 auto;
 }
 
 .poem-body p {
   margin-bottom: 1.4em;
+}
+.poem-inner {
+  max-width: 62ch;
+  margin: 0 auto;
 }
 .poem-date {
   font-family: var(--font-display);
