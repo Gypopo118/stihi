@@ -258,7 +258,7 @@ body::before {
 }
 
 .poem-body p {
-  margin-bottom: 0.7em;
+  margin-bottom: 0.6em;
 }
 .poem-inner {
   max-width: 62ch;
