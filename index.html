@@ -10,10 +10,10 @@
 
   <div class="light-source" aria-hidden="true"></div>
 
-  <header class="site-header">
+  <!-- Шапка: скрывается на мобильном при открытом стихотворении -->
+  <header class="site-header" id="siteHeader">
     <div class="header-inner">
       <span class="author-name">Алексей Захарчук</span>
-      <div class="header-divider" aria-hidden="true"></div>
     </div>
   </header>
 
@@ -22,7 +22,7 @@
     <!-- Левая панель: список заголовков -->
     <aside class="sidebar" id="sidebar" aria-label="Список стихотворений">
       <div class="sidebar-header">
-        <h2 class="sidebar-title">Стихотворения</h2>
+        <h2 class="sidebar-title">Стихи</h2>
         <div class="sidebar-divider" aria-hidden="true"></div>
       </div>
       <nav class="poem-list" id="poemList" role="navigation" aria-label="Стихотворения">
@@ -39,14 +39,9 @@
       </div>
     </section>
 
-    <!-- Мобильная кнопка возврата к списку -->
-    <button class="back-btn" id="backBtn" aria-label="Вернуться к списку стихотворений" hidden>
-      &#8592; Список
-    </button>
-
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer" id="siteFooter">
     <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
   </footer>
 
