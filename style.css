@@ -242,19 +242,12 @@ body::before {
   letter-spacing: 0.04em;
   color: var(--gold);
   text-align: left;
-  margin-bottom: 0.4rem;
+  max-width: 62ch;
+  margin: 0 auto 0.4rem;
 }
 
 .poem-title-divider {
-  display: flex;
-  justify-content: flex-start;
-  margin: 0.6rem 0 2rem;
-}
-
-.poem-title-divider::after {
-  content: '•';
-  color: var(--gold-dim);
-  font-size: 0.7rem;
+  display: none;
 }
 
 .poem-body {
