@@ -37,7 +37,7 @@ function parseFrontmatter(text) {
     const m = line.match(/^(\w+):\s*"?([^"]*)"?\s*$/);
     if (m) meta[m[1].trim()] = m[2].trim();
   });
-  return { title: meta.title || '', body: fm[2].trim() };
+  return { title: meta.title || '', date: meta.date || '', body: fm[2].trim() };
 }
 
 function escHtml(s) {
@@ -154,12 +154,17 @@ async function openPoem(slug, pushState) {
     const res = await fetch('poems/' + slug + '.md');
     if (!res.ok) throw new Error('Not found');
     const raw = await res.text();
-    const { title, body } = parseFrontmatter(raw);
+    const { title, date, body } = parseFrontmatter(raw);
 
-    poemDisplay.innerHTML =
-      '<h1 class="poem-title">' + escHtml(title) + '</h1>' +
-      '<div class="poem-title-divider" aria-hidden="true"></div>' +
-      '<div class="poem-body">' + parsePoemText(body) + '</div>';
+    const dateHtml = date
+  ? '<div class="poem-date">' + escHtml(date) + '</div>'
+  : '';
+
+poemDisplay.innerHTML =
+  '<h1 class="poem-title">' + escHtml(title) + '</h1>' +
+  '<div class="poem-title-divider" aria-hidden="true"></div>' +
+  '<div class="poem-body">' + parsePoemText(body) + '</div>' +
+  dateHtml;
 
     syncSidebarScroll(slug);
   } catch (e) {
