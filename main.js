@@ -161,10 +161,11 @@ async function openPoem(slug, pushState) {
   : '';
 
 poemDisplay.innerHTML =
+  '<div class="poem-inner">' +
   '<h1 class="poem-title">' + escHtml(title) + '</h1>' +
-  '<div class="poem-title-divider" aria-hidden="true"></div>' +
   '<div class="poem-body">' + parsePoemText(body) + '</div>' +
-  dateHtml;
+  dateHtml +
+  '</div>';
 
     syncSidebarScroll(slug);
   } catch (e) {
