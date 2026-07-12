@@ -10,7 +10,7 @@
 
   <div class="light-source" aria-hidden="true"></div>
 
-  <!-- Шапка: скрывается на мобильном при открытом стихотворении -->
+  <!-- Шапка: только на десктопе (на мобильном скрыта через CSS) -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
       <span class="author-name">Алексей Захарчук</span>
@@ -23,11 +23,17 @@
     <aside class="sidebar" id="sidebar" aria-label="Список стихотворений">
       <div class="sidebar-header">
         <h2 class="sidebar-title">Стихи</h2>
+        <!-- На мобильном «Алексей Захарчук» отображается здесь, в одну строку со «Стихи» -->
+        <span class="author-name">Алексей Захарчук</span>
         <div class="sidebar-divider" aria-hidden="true"></div>
       </div>
       <nav class="poem-list" id="poemList" role="navigation" aria-label="Стихотворения">
         <div class="poem-list-loading">Загрузка…</div>
       </nav>
+      <!-- Футер внутри сайдбара: на мобильном жёстко внизу -->
+      <footer class="site-footer" id="siteFooter">
+        <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
+      </footer>
     </aside>
 
     <!-- Правая панель: текст стихотворения -->
@@ -41,8 +47,9 @@
 
   </main>
 
-  <footer class="site-footer" id="siteFooter">
-    <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
+  <!-- Футер на десктопе — вне сайдбара -->
+  <footer class="site-footer site-footer-desktop" id="siteFooterDesktop">
+    <span id="copyrightYearDesktop"></span> Алексей Захарчук. Все права защищены.
   </footer>
 
   <script src="main.js"></script>
