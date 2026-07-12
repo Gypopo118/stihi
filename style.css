@@ -56,7 +56,6 @@ body {
   z-index: 0;
 }
 
-/* Background texture */
 body::before {
   content: '';
   position: fixed;
@@ -68,7 +67,7 @@ body::before {
   pointer-events: none;
 }
 
-/* ===== HEADER ===== */
+/* ===== HEADER (десктоп) ===== */
 .site-header {
   position: relative;
   z-index: 10;
@@ -80,7 +79,6 @@ body::before {
   display: inline-block;
 }
 
-/* "Алексей Захарчук" — мелкий шрифт, без подчёркивания */
 .author-name {
   font-family: var(--font-display);
   font-size: 0.78rem;
@@ -93,7 +91,7 @@ body::before {
   outline: none;
 }
 
-/* ===== MAIN LAYOUT ===== */
+/* ===== MAIN LAYOUT (десктоп) ===== */
 .layout {
   position: relative;
   z-index: 5;
@@ -126,7 +124,6 @@ body::before {
   flex-shrink: 0;
 }
 
-/* "Стихи" — тот же стиль что у имени автора */
 .sidebar-title {
   font-family: var(--font-display);
   font-size: 0.78rem;
@@ -282,7 +279,7 @@ body::before {
   padding: 2rem 0;
 }
 
-/* ===== FOOTER ===== */
+/* ===== FOOTER (десктоп) ===== */
 .site-footer {
   position: relative;
   z-index: 5;
@@ -303,10 +300,11 @@ body::before {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== MOBILE ===== */
+/* ===================================================
+   МОБИЛЬНАЯ ВЕРСИЯ
+   =================================================== */
 @media (max-width: 768px) {
 
-  /* На мобильном весь экран — один из двух видов: список или стихотворение */
   body {
     overflow: hidden;
     height: 100dvh;
@@ -319,27 +317,13 @@ body::before {
     left: -80px;
   }
 
-  /* Шапка с именем — часть панели списка, не отдельный блок */
-  .site-header {
-    position: relative;
-    padding: 1.2rem 1.4rem 0.8rem;
-    text-align: right;
-    z-index: 1;
-  }
-
-  /* Footer тоже внутри панели списка */
-  .site-footer {
-    position: relative;
-    z-index: 1;
-  }
-
   .layout {
     display: block;
     padding: 0;
     min-height: unset;
   }
 
-  /* Панель списка: занимает весь экран */
+  /* Сайдбар — полноэкранная панель списка */
   .sidebar {
     position: fixed;
     inset: 0;
@@ -354,12 +338,78 @@ body::before {
     overflow: hidden;
   }
 
-  /* Скрыть панель списка при открытом стихе */
   .sidebar.hidden-mobile {
     transform: translateX(-100%);
   }
 
-  /* Панель стихотворения: занимает весь экран */
+  /* Шапка внутри сайдбара: flex-строка со «Стихи» слева и «Алексей Захарчук» справа */
+  .sidebar-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.2rem 0;
+    flex-shrink: 0;
+  }
+
+  /* «Стихи» — левый элемент */
+  .sidebar-title {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    line-height: 1;
+  }
+
+  /* «Алексей Захарчук» внутри sidebar-header — правый элемент,
+     явно задаём те же параметры что у sidebar-title */
+  .sidebar-header .author-name {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* Разделитель — под строкой с заголовком */
+  .sidebar-divider {
+    margin: 0.8rem 1.2rem 0;
+    flex-shrink: 0;
+  }
+
+  /* Шапка вне сайдбара на мобильном — скрыта */
+  .site-header {
+    display: none;
+  }
+
+  /* Список — занимает всё свободное пространство */
+  .poem-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Футер — жёстко внизу панели списка, не скроллится */
+  .site-footer {
+    flex-shrink: 0;
+    position: static;
+    padding: 0.8rem 1.2rem 1.2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* Футер скрыт когда открыто стихотворение */
+  .site-footer.hidden-mobile {
+    display: none;
+  }
+
+  /* Панель стихотворения */
   .content-panel {
     position: fixed;
     inset: 0;
@@ -379,12 +429,6 @@ body::before {
     display: block;
   }
 
-  /* Шапка и футер — скрыты вне панели списка */
-  .site-header.hidden-mobile,
-  .site-footer.hidden-mobile {
-    display: none;
-  }
-
   .poem-title {
     font-size: 1.5rem;
     margin-top: 0.5rem;
@@ -392,5 +436,35 @@ body::before {
 
   .poem-body {
     font-size: 1.05rem;
+  }
+}
+
+/* ===== ДЕСКТОП: футер внутри сайдбара скрыт, sidebar-header без flex ===== */
+@media (min-width: 769px) {
+  /* Внутри сайдбара на десктопе: имя автора скрыто (оно есть в шапке) */
+  .sidebar-header .author-name {
+    display: none;
+  }
+
+  /* sidebar-divider возвращается под sidebar-title */
+  .sidebar-divider {
+    margin-top: 0.5rem;
+  }
+
+  /* Футер внутри сайдбара — скрыт на десктопе */
+  .sidebar .site-footer {
+    display: none;
+  }
+
+  /* Футер вне сайдбара — виден только на десктопе */
+  .site-footer-desktop {
+    display: block;
+  }
+}
+
+/* На мобильном десктопный футер скрыт */
+@media (max-width: 768px) {
+  .site-footer-desktop {
+    display: none;
   }
 }
