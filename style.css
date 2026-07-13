@@ -605,10 +605,6 @@ body::before {
     text-transform: uppercase;
     line-height: 1;
   }
-  .mobile-search-btn {
-  margin-left: auto;
-  margin-right: 0;
-}
 
   .sidebar-divider {
     margin: 0.8rem 1.2rem 0;
