@@ -1,0 +1,57 @@
+name: Generate poem index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'poems/**.md'
+
+jobs:
+  build-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate poems/index.json
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, json
+
+          poems_dir = 'poems'
+          entries = []
+
+          for fname in sorted(os.listdir(poems_dir)):
+              if not fname.endswith('.md'):
+                  continue
+              slug = fname[:-3]
+              fpath = os.path.join(poems_dir, fname)
+              with open(fpath, encoding='utf-8') as f:
+                  content = f.read()
+
+              title = slug
+              m = re.search(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
+              if m:
+                  tm = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', m.group(1), re.MULTILINE)
+                  if tm:
+                      title = tm.group(1).strip()
+
+              entries.append({'slug': slug, 'title': title})
+
+          out_path = os.path.join(poems_dir, 'index.json')
+          with open(out_path, 'w', encoding='utf-8') as f:
+              json.dump(entries, f, ensure_ascii=False, indent=2)
+
+          print(f'Written {len(entries)} entries to {out_path}')
+          PYEOF
+
+      - name: Commit index.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add poems/index.json
+          git diff --cached --quiet || git commit -m "chore: update poems/index.json [skip ci]"
+          git push
