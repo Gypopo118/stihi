@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'poems/**.md'
+      - 'order.txt'
 
 jobs:
   build-index:
@@ -22,24 +23,39 @@ jobs:
           import os, re, json
 
           poems_dir = 'poems'
-          entries = []
 
-          for fname in sorted(os.listdir(poems_dir)):
+          # Читаем порядок из order.txt если он есть
+          order = []
+          if os.path.exists('order.txt'):
+              with open('order.txt', encoding='utf-8') as f:
+                  order = [l.strip() for l in f if l.strip() and not l.startswith('#')]
+
+          # Читаем все доступные md-файлы
+          available = {}
+          for fname in os.listdir(poems_dir):
               if not fname.endswith('.md'):
                   continue
               slug = fname[:-3]
               fpath = os.path.join(poems_dir, fname)
               with open(fpath, encoding='utf-8') as f:
                   content = f.read()
-
               title = slug
               m = re.search(r'^---\s*\n(.*?)\n---', content, re.DOTALL)
               if m:
                   tm = re.search(r'^title:\s*["\']?(.+?)["\']?\s*$', m.group(1), re.MULTILINE)
                   if tm:
                       title = tm.group(1).strip()
+              available[slug] = title
 
-              entries.append({'slug': slug, 'title': title})
+          # Сначала те что в order.txt, потом остальные по алфавиту
+          entries = []
+          for slug in order:
+              if slug in available:
+                  entries.append({'slug': slug, 'title': available[slug]})
+
+          for slug in sorted(available):
+              if slug not in order:
+                  entries.append({'slug': slug, 'title': available[slug]})
 
           out_path = os.path.join(poems_dir, 'index.json')
           with open(out_path, 'w', encoding='utf-8') as f:
