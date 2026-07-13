@@ -28,7 +28,8 @@
 html { height: 100%; }
 
 body {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: var(--font-body);
@@ -99,7 +100,7 @@ body::before {
   grid-template-columns: var(--sidebar-w) 1fr;
   gap: 1.5rem;
   padding: 0.6rem 2rem 1.5rem;
-  min-height: calc(100vh - 120px);
+  height: calc(100vh - 120px);
   align-items: start;
 }
 
@@ -216,7 +217,7 @@ body::before {
   background: var(--bg-panel);
   border: 1px solid var(--border-color);
   border-radius: var(--radius);
-  min-height: calc(100vh - 100px);
+  height: calc(100vh - 100px);
   padding: 2.5rem 3.5rem;
   overflow-y: auto;
   box-shadow:
