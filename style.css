@@ -14,6 +14,8 @@
   --text-dim: #8a8070;
   --text-poem: #ffffff;
   --accent-visited: #6a8060;
+  --highlight-bg: rgba(200, 169, 110, 0.35);
+  --highlight-border: #c8a96e;
   --font-display: 'Cormorant SC', serif;
   --font-body: 'Cormorant Garamond', serif;
   --font-poem: 'EB Garamond', serif;
@@ -77,7 +79,9 @@ body::before {
 }
 
 .header-inner {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .author-name {
@@ -90,6 +94,29 @@ body::before {
   text-decoration: none;
   border: none;
   outline: none;
+}
+
+/* ===== ЛУПА ===== */
+.search-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition);
+  flex-shrink: 0;
+}
+
+.search-icon-btn:hover {
+  color: var(--gold);
+}
+
+/* Лупа в панели стихотворения (мобильный) — скрыта на десктопе */
+.poem-search-btn {
+  display: none;
 }
 
 /* ===== MAIN LAYOUT (десктоп) ===== */
@@ -223,6 +250,7 @@ body::before {
   box-shadow:
     -1px -1px 0 rgba(200, 169, 110, 0.18),
     inset 0 0 60px rgba(0,0,0,0.12);
+  position: relative;
 }
 
 /* ===== POEM DISPLAY ===== */
@@ -236,6 +264,11 @@ body::before {
   font-style: italic;
 }
 
+.poem-inner {
+  max-width: 62ch;
+  margin: 0 auto;
+}
+
 .poem-title {
   font-family: var(--font-display);
   font-size: 2rem;
@@ -243,7 +276,7 @@ body::before {
   letter-spacing: 0.04em;
   color: var(--gold);
   text-align: left;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.8rem;
 }
 
 .poem-title-divider {
@@ -259,20 +292,25 @@ body::before {
 }
 
 .poem-body p {
-  margin-bottom: 0.6em;
+  margin-bottom: 0.8em;
 }
-.poem-inner {
-  max-width: 62ch;
-  margin: 0 auto;
-}
+
 .poem-date {
   font-family: var(--font-display);
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   color: var(--text-dim);
   text-align: right;
-  max-width: 62ch;
-  margin: 1.5rem auto 0;
+  margin-top: 1.5rem;
+}
+
+/* Подсветка найденного текста в стихотворении */
+.poem-body mark,
+.poem-title mark {
+  background: var(--highlight-bg);
+  color: var(--gold-bright);
+  border-radius: 2px;
+  padding: 0 1px;
 }
 
 .poem-loading {
@@ -305,6 +343,215 @@ body::before {
 }
 
 /* ===================================================
+   ПАНЕЛЬ ПОИСКА
+   =================================================== */
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(10, 10, 8, 0.7);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 6rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.search-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.search-panel {
+  width: 100%;
+  max-width: 580px;
+  background: #222220;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+/* Строка ввода */
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.search-input-icon {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-main);
+  caret-color: var(--gold);
+}
+
+.search-input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Убираем крестик встроенный в браузере для type=search */
+.search-input::-webkit-search-cancel-button { display: none; }
+
+.search-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 0.2rem 0.3rem;
+  transition: color var(--transition);
+  flex-shrink: 0;
+}
+
+.search-close-btn:hover {
+  color: var(--text-main);
+}
+
+/* История поиска */
+.search-history {
+  flex-shrink: 0;
+}
+
+.search-history-title {
+  padding: 0.5rem 1rem 0.2rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.search-history-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  transition: color var(--transition), background var(--transition);
+}
+
+.search-history-item:hover {
+  color: var(--text-main);
+  background: rgba(255,255,255,0.04);
+}
+
+.search-history-icon {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+/* Результаты поиска */
+.search-results {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-dim) transparent;
+}
+
+.search-results::-webkit-scrollbar { width: 4px; }
+.search-results::-webkit-scrollbar-thumb {
+  background: var(--gold-dim);
+  border-radius: 4px;
+}
+
+.search-empty {
+  padding: 1.5rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+}
+
+.search-status {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+/* Один результат */
+.search-result-item {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.search-result-item:hover {
+  background: rgba(200, 169, 110, 0.07);
+}
+
+.search-result-title {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 0.25rem;
+}
+
+.search-result-line {
+  font-family: var(--font-poem);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+/* Подсветка в результатах */
+.search-result-line mark,
+.search-result-title mark {
+  background: var(--highlight-bg);
+  color: var(--gold-bright);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.search-indexing {
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ===================================================
+   ДЕСКТОП: скрыть мобильные элементы
+   =================================================== */
+@media (min-width: 769px) {
+  .sidebar-header .author-name { display: none; }
+  .mobile-search-btn { display: none; }
+  .sidebar-header { display: block; }
+  .sidebar .site-footer { display: none; }
+  .site-footer-desktop { display: block; }
+  .poem-search-btn { display: none; }
+}
+
+/* ===================================================
    МОБИЛЬНАЯ ВЕРСИЯ
    =================================================== */
 @media (max-width: 768px) {
@@ -325,9 +572,45 @@ body::before {
     display: block;
     padding: 0;
     min-height: unset;
+    height: unset;
   }
 
-  /* Сайдбар — полноэкранная панель списка */
+  /* Шапка вне сайдбара — скрыта */
+  .site-header { display: none; }
+
+  /* Sidebar-header: flex-строка Стихи / Алексей Захарчук / лупа */
+  .sidebar-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.2rem 0;
+    flex-shrink: 0;
+  }
+
+  .sidebar-title {
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    line-height: 1;
+  }
+
+  .sidebar-header .author-name {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .sidebar-divider {
+    margin: 0.8rem 1.2rem 0;
+    flex-shrink: 0;
+  }
+
   .sidebar {
     position: fixed;
     inset: 0;
@@ -346,58 +629,12 @@ body::before {
     transform: translateX(-100%);
   }
 
-  /* Шапка внутри сайдбара: flex-строка со «Стихи» слева и «Алексей Захарчук» справа */
-  .sidebar-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.2rem 1.2rem 0;
-    flex-shrink: 0;
-  }
-
-  /* «Стихи» — левый элемент */
-  .sidebar-title {
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    font-weight: 300;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    line-height: 1;
-  }
-
-  /* «Алексей Захарчук» внутри sidebar-header — правый элемент,
-     явно задаём те же параметры что у sidebar-title */
-  .sidebar-header .author-name {
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    font-weight: 300;
-    letter-spacing: 0.14em;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    line-height: 1;
-  }
-
-  /* Разделитель — под строкой с заголовком */
-  .sidebar-divider {
-    margin: 0.8rem 1.2rem 0;
-    flex-shrink: 0;
-  }
-
-  /* Шапка вне сайдбара на мобильном — скрыта */
-  .site-header {
-    display: none;
-  }
-
-  /* Список — занимает всё свободное пространство */
   .poem-list {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Футер — жёстко внизу панели списка, не скроллится */
   .site-footer {
     flex-shrink: 0;
     position: static;
@@ -408,10 +645,8 @@ body::before {
     letter-spacing: 0.06em;
   }
 
-  /* Футер скрыт когда открыто стихотворение */
-  .site-footer.hidden-mobile {
-    display: none;
-  }
+  .site-footer.hidden-mobile { display: none; }
+  .site-footer-desktop { display: none; }
 
   /* Панель стихотворения */
   .content-panel {
@@ -421,7 +656,7 @@ body::before {
     width: 100%;
     border-radius: 0;
     border: none;
-    padding: 1.4rem 1.4rem 2rem;
+    padding: 3rem 1.4rem 2rem; /* место для лупы сверху */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     display: none;
@@ -433,43 +668,39 @@ body::before {
     display: block;
   }
 
+  /* Лупа в панели стихотворения (мобильный) */
+  .poem-search-btn {
+    display: flex;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 15;
+  }
+
   .poem-title {
     font-size: 1.5rem;
     margin-top: 0.5rem;
     text-align: center;
   }
 
+  .poem-inner {
+    max-width: 100%;
+    margin: 0;
+  }
+
   .poem-body {
     font-size: 1.05rem;
   }
-}
 
-/* ===== ДЕСКТОП: футер внутри сайдбара скрыт, sidebar-header без flex ===== */
-@media (min-width: 769px) {
-  /* Внутри сайдбара на десктопе: имя автора скрыто (оно есть в шапке) */
-  .sidebar-header .author-name {
-    display: none;
+  /* Панель поиска на мобильном — на весь экран */
+  .search-overlay {
+    padding-top: 0;
+    align-items: flex-end;
   }
 
-  /* sidebar-divider возвращается под sidebar-title */
-  .sidebar-divider {
-    margin-top: 0.5rem;
-  }
-
-  /* Футер внутри сайдбара — скрыт на десктопе */
-  .sidebar .site-footer {
-    display: none;
-  }
-
-  /* Футер вне сайдбара — виден только на десктопе */
-  .site-footer-desktop {
-    display: block;
-  }
-}
-
-/* На мобильном десктопный футер скрыт */
-@media (max-width: 768px) {
-  .site-footer-desktop {
-    display: none;
+  .search-panel {
+    max-width: 100%;
+    border-radius: var(--radius) var(--radius) 0 0;
+    max-height: 85dvh;
   }
 }

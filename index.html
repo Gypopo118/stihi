@@ -10,9 +10,16 @@
 
   <div class="light-source" aria-hidden="true"></div>
 
-  <!-- Шапка: только на десктопе (на мобильном скрыта через CSS) -->
+  <!-- Шапка: только на десктопе -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
+      <!-- Лупа на десктопе: слева от имени -->
+      <button class="search-icon-btn" id="searchIconBtn" aria-label="Поиск">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+      </button>
       <span class="author-name">Алексей Захарчук</span>
     </div>
   </header>
@@ -23,14 +30,19 @@
     <aside class="sidebar" id="sidebar" aria-label="Список стихотворений">
       <div class="sidebar-header">
         <h2 class="sidebar-title">Стихи</h2>
-        <!-- На мобильном «Алексей Захарчук» отображается здесь, в одну строку со «Стихи» -->
+        <!-- На мобильном: имя и лупа в одной строке со «Стихи» -->
         <span class="author-name">Алексей Захарчук</span>
+        <button class="search-icon-btn mobile-search-btn" id="searchIconBtnMobile" aria-label="Поиск">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <circle cx="6.5" cy="6.5" r="5"/>
+            <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+          </svg>
+        </button>
         <div class="sidebar-divider" aria-hidden="true"></div>
       </div>
       <nav class="poem-list" id="poemList" role="navigation" aria-label="Стихотворения">
         <div class="poem-list-loading">Загрузка…</div>
       </nav>
-      <!-- Футер внутри сайдбара: на мобильном жёстко внизу -->
       <footer class="site-footer" id="siteFooter">
         <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
       </footer>
@@ -38,6 +50,13 @@
 
     <!-- Правая панель: текст стихотворения -->
     <section class="content-panel" id="contentPanel" aria-live="polite" aria-label="Текст стихотворения">
+      <!-- Лупа в мобильном виде стихотворения -->
+      <button class="search-icon-btn poem-search-btn" id="searchIconBtnPoem" aria-label="Поиск">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+      </button>
       <div class="poem-display" id="poemDisplay">
         <div class="poem-placeholder">
           <p>Выберите стихотворение из списка слева</p>
@@ -47,10 +66,33 @@
 
   </main>
 
-  <!-- Футер на десктопе — вне сайдбара -->
+  <!-- Футер десктоп -->
   <footer class="site-footer site-footer-desktop" id="siteFooterDesktop">
     <span id="copyrightYearDesktop"></span> Алексей Захарчук. Все права защищены.
   </footer>
+
+  <!-- Панель поиска (общая для десктопа и мобильного) -->
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <div class="search-panel" id="searchPanel" role="dialog" aria-label="Поиск по стихотворениям">
+      <div class="search-input-row">
+        <svg class="search-input-icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+        <input
+          type="search"
+          class="search-input"
+          id="searchInput"
+          placeholder="Поиск по стихотворениям…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="Закрыть поиск">✕</button>
+      </div>
+      <div class="search-history" id="searchHistory"></div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
 
   <script src="main.js"></script>
 </body>
