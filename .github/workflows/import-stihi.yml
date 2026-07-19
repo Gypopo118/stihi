@@ -1,0 +1,189 @@
+name: Import all poems from stihi.ru
+
+on:
+  workflow_dispatch:
+    inputs:
+      author:
+        description: 'Логин автора на stihi.ru'
+        required: true
+        default: 'gypopo'
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Import poems
+        env:
+          AUTHOR: ${{ github.event.inputs.author }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, time
+          import requests
+          from bs4 import BeautifulSoup
+
+          AUTHOR = os.environ["AUTHOR"]
+          BASE = "https://stihi.ru"
+          OUT_DIR = "стихи"
+          HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; personal-archive-script/1.0)"}
+
+          TRANSLIT = {
+              "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+              "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+              "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+              "ф": "f", "х": "h", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
+              "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu", "я": "ya",
+          }
+
+          def slugify(title):
+              title = title.lower()
+              out = []
+              for ch in title:
+                  if ch in TRANSLIT:
+                      out.append(TRANSLIT[ch])
+                  elif ch.isalnum() and ch.isascii():
+                      out.append(ch)
+                  elif ch in " -_":
+                      out.append("-")
+              return re.sub(r"-+", "-", "".join(out)).strip("-")
+
+          def fetch_author_page(offset):
+              url = f"{BASE}/avtor/{AUTHOR}" if offset == 0 else f"{BASE}/avtor/{AUTHOR}&s={offset}"
+              r = requests.get(url, headers=HEADERS, timeout=20)
+              r.raise_for_status()
+              return r.text
+
+          LIST_DATE_RE = re.compile(r"(\d{2}\.\d{2}\.\d{4})")
+
+          def parse_poem_links(html):
+              soup = BeautifulSoup(html, "html.parser")
+              items = []
+              for a in soup.select("a.poemlink"):
+                  href = a.get("href", "")
+                  title = a.get_text(strip=True)
+                  fallback_date = None
+                  small = a.find_next("small")
+                  if small:
+                      m = LIST_DATE_RE.search(small.get_text())
+                      if m:
+                          fallback_date = m.group(1)
+                  if href.startswith("/"):
+                      items.append((BASE + href, title, fallback_date))
+              return items
+
+          def collect_all_poems():
+              seen = {}
+              offset = 0
+              while True:
+                  html = fetch_author_page(offset)
+                  items = parse_poem_links(html)
+                  if not items:
+                      break
+                  new_count = 0
+                  for url, title, fallback_date in items:
+                      if url not in seen:
+                          new_count += 1
+                      seen[url] = (title, fallback_date)
+                  if new_count == 0 and offset > 0:
+                      break
+                  offset += 50
+                  time.sleep(1)
+              return [(url, t, fd) for url, (t, fd) in seen.items()]
+
+          DATE_RE = re.compile(r"^\d{2}\.\d{2}\.\d{4}$")
+
+          def fetch_poem(url, fallback_date=None):
+              r = requests.get(url, headers=HEADERS, timeout=20)
+              r.raise_for_status()
+              soup = BeautifulSoup(r.text, "html.parser")
+
+              h1 = soup.select_one("h1")
+              if not h1:
+                  raise RuntimeError(f"Не найден <h1> на {url}")
+              title = h1.get_text(strip=True)
+
+              node = soup.select_one("div.text")
+              if not node:
+                  raise RuntimeError(f"Не найден div.text на {url}")
+
+              for br in node.find_all("br"):
+                  br.replace_with("\n")
+              raw = node.get_text()
+              raw = re.sub(r"\n[ \t]*\n", "\n", raw)
+              lines = raw.strip("\n").split("\n")
+
+              while lines and lines[-1].strip() == "":
+                  lines.pop()
+
+              date = fallback_date
+              if lines and DATE_RE.match(lines[-1].strip()):
+                  date = lines.pop().strip()
+                  while lines and lines[-1].strip() == "":
+                      lines.pop()
+
+              body = "\n".join(l.rstrip() for l in lines).strip("\n")
+              if len(body) < 5:
+                  raise RuntimeError(f"Текст на {url} подозрительно короткий")
+
+              return title, date, body
+
+          POEM_TEMPLATE = '---\ntitle: "{title}"\ndate: {date}\n---\n{text}\n'
+
+          os.makedirs(OUT_DIR, exist_ok=True)
+          poems = collect_all_poems()
+          print(f"Найдено произведений: {len(poems)}")
+
+          order_lines = []
+          used_slugs = set()
+          saved, skipped = 0, 0
+
+          for url, title, fallback_date in poems:
+              slug = slugify(title)
+              if slug in used_slugs:
+                  base, i = slug, 2
+                  while slug in used_slugs:
+                      slug = f"{base}-{i}"
+                      i += 1
+                  print(f"ВНИМАНИЕ: дублирующийся slug для «{title}», использован {slug}")
+              used_slugs.add(slug)
+
+              try:
+                  poem_title, date, text = fetch_poem(url, fallback_date=fallback_date)
+              except RuntimeError as e:
+                  print(f"ПРОПУЩЕНО: {title} — {e}")
+                  skipped += 1
+                  continue
+
+              with open(os.path.join(OUT_DIR, f"{slug}.md"), "w", encoding="utf-8") as f:
+                  f.write(POEM_TEMPLATE.format(title=poem_title, date=date or "", text=text))
+
+              order_lines.append(slug)
+              saved += 1
+              print(f"OK: {title} -> {slug}.md")
+              time.sleep(1)
+
+          with open(os.path.join(OUT_DIR, "..", "order.txt"), "w", encoding="utf-8") as f:
+              f.write("\n".join(order_lines) + "\n")
+
+          print(f"\nГотово. Сохранено: {saved}, пропущено: {skipped}")
+          PYEOF
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add стихи order.txt
+          git diff --cached --quiet || git commit -m "chore: bulk import poems from stihi.ru"
+          git push
