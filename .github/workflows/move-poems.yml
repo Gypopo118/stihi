@@ -1,0 +1,35 @@
+name: Move imported poems to poems folder
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Move files
+        run: |
+          shopt -s nullglob
+          count=0
+          for f in стихи/*.md; do
+            mv -f "$f" "poems/$(basename "$f")"
+            count=$((count+1))
+          done
+          echo "Перенесено файлов: $count"
+          # удаляем папку "стихи", если она теперь пустая
+          rmdir "стихи" 2>/dev/null && echo "Папка 'стихи' удалена (была пустой)" || echo "Папка 'стихи' не пуста или уже отсутствует — оставлена как есть"
+          echo "Итого файлов в poems/:"
+          ls poems | wc -l
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "chore: move imported poems from стихи/ to poems/"
+          git push
