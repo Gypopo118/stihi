@@ -4,11 +4,859 @@
     "title": "Только звук"
   },
   {
-    "slug": "posredi-nochnogo-kluba",
-    "title": "Посреди ночного клуба"
+    "slug": "ya-posredi-nochnogo-kluba",
+    "title": "Я посреди ночного клуба"
+  },
+  {
+    "slug": "est-tolko-dozhd",
+    "title": "Есть только дождь"
+  },
+  {
+    "slug": "lish-e-ravno-ms-v-kvadrate",
+    "title": "Лишь E равно mс в квадрате"
+  },
+  {
+    "slug": "lish-algoritm",
+    "title": "Лишь алгоритм"
   },
   {
     "slug": "my-shli-vdol-ozhivlyonnyh-trass",
-    "title": "Мы шли вдоль оживленных трасс"
+    "title": "Мы шли вдоль оживлённых трасс"
+  },
+  {
+    "slug": "otchego-ya-myslyu",
+    "title": "Отчего я мыслю"
+  },
+  {
+    "slug": "ne-byvaet",
+    "title": "Не бывает"
+  },
+  {
+    "slug": "chtoby-dron-ne-zametil",
+    "title": "Чтобы дрон не заметил"
+  },
+  {
+    "slug": "u-kamnya",
+    "title": "У камня"
+  },
+  {
+    "slug": "no-ne-uspeyu",
+    "title": "Но не успею"
+  },
+  {
+    "slug": "posredine",
+    "title": "Посредине"
+  },
+  {
+    "slug": "vechnyy-veter",
+    "title": "Вечный ветер"
+  },
+  {
+    "slug": "kogda-ya-smotryu",
+    "title": "Когда я смотрю"
+  },
+  {
+    "slug": "uzhe",
+    "title": "Уже"
+  },
+  {
+    "slug": "pochemu",
+    "title": "Почему"
+  },
+  {
+    "slug": "uplyvali",
+    "title": "Уплывали"
+  },
+  {
+    "slug": "gulyali",
+    "title": "Гуляли"
+  },
+  {
+    "slug": "ya-sproshu-ego",
+    "title": "Я спрошу его"
+  },
+  {
+    "slug": "teryayu",
+    "title": "Теряю"
+  },
+  {
+    "slug": "oklik",
+    "title": "Оклик"
+  },
+  {
+    "slug": "rozhdayas",
+    "title": "Рождаясь"
+  },
+  {
+    "slug": "shagnu",
+    "title": "Шагну"
+  },
+  {
+    "slug": "vostochnyy-veter",
+    "title": "Восточный ветер"
+  },
+  {
+    "slug": "ne-znali",
+    "title": "Не знали"
+  },
+  {
+    "slug": "lekalo",
+    "title": "Лекало"
+  },
+  {
+    "slug": "raspalsya",
+    "title": "Распался"
+  },
+  {
+    "slug": "ne-uslyshal",
+    "title": "Не услышал"
+  },
+  {
+    "slug": "rana",
+    "title": "Рана"
+  },
+  {
+    "slug": "tantsuy",
+    "title": "Танцуй"
+  },
+  {
+    "slug": "v-tupikah",
+    "title": "В тупиках"
+  },
+  {
+    "slug": "v-muzee-sssr",
+    "title": "В музее СССР"
+  },
+  {
+    "slug": "vsyo-vokrug",
+    "title": "Всё вокруг"
+  },
+  {
+    "slug": "shtormit",
+    "title": "Штормит"
+  },
+  {
+    "slug": "ya-vizhu",
+    "title": "Я вижу"
+  },
+  {
+    "slug": "chitayu",
+    "title": "Читаю"
+  },
+  {
+    "slug": "gde-son",
+    "title": "Где сон"
+  },
+  {
+    "slug": "pora",
+    "title": "Пора"
+  },
+  {
+    "slug": "mimo",
+    "title": "Мимо"
+  },
+  {
+    "slug": "bune-ziua",
+    "title": "Бунэ зиуа"
+  },
+  {
+    "slug": "zvonari",
+    "title": "Звонари"
+  },
+  {
+    "slug": "poslednee",
+    "title": "Последнее"
+  },
+  {
+    "slug": "bezhal",
+    "title": "Бежал"
+  },
+  {
+    "slug": "pogasnet-svet",
+    "title": "Погаснет свет"
+  },
+  {
+    "slug": "no-ohote",
+    "title": "Но охоте"
+  },
+  {
+    "slug": "spustitsya-voda",
+    "title": "Спустится вода"
+  },
+  {
+    "slug": "prosto",
+    "title": "Просто"
+  },
+  {
+    "slug": "kto",
+    "title": "Кто"
+  },
+  {
+    "slug": "stala-nazvana",
+    "title": "Стала названа"
+  },
+  {
+    "slug": "arbat",
+    "title": "Арбат"
+  },
+  {
+    "slug": "ostalsya",
+    "title": "Остался"
+  },
+  {
+    "slug": "umela",
+    "title": "Умела"
+  },
+  {
+    "slug": "perestanet",
+    "title": "Перестанет"
+  },
+  {
+    "slug": "imya",
+    "title": "Имя"
+  },
+  {
+    "slug": "kasayas",
+    "title": "Касаясь"
+  },
+  {
+    "slug": "ne-taet",
+    "title": "Не тает"
+  },
+  {
+    "slug": "v-strane-kotoroy-net",
+    "title": "В стране, которой нет"
+  },
+  {
+    "slug": "kvantovoe",
+    "title": "Квантовое"
+  },
+  {
+    "slug": "tut-teplitsya",
+    "title": "Тут теплится"
+  },
+  {
+    "slug": "rassmeyus",
+    "title": "Рассмеюсь"
+  },
+  {
+    "slug": "proizoshla",
+    "title": "Произошла"
+  },
+  {
+    "slug": "promzona",
+    "title": "Промзона"
+  },
+  {
+    "slug": "perestanet-2",
+    "title": "Перестанет"
+  },
+  {
+    "slug": "kuranty-zvenyat",
+    "title": "Куранты звенят"
+  },
+  {
+    "slug": "nelzya",
+    "title": "Нельзя"
+  },
+  {
+    "slug": "v-kishineve",
+    "title": "В Кишиневе"
+  },
+  {
+    "slug": "proshla",
+    "title": "Прошла"
+  },
+  {
+    "slug": "nedotroga",
+    "title": "Недотрога"
+  },
+  {
+    "slug": "den-noyabrya",
+    "title": "День ноября"
+  },
+  {
+    "slug": "vslushivayas",
+    "title": "Вслушиваясь"
+  },
+  {
+    "slug": "lyublyu-rodinu",
+    "title": "Люблю родину"
+  },
+  {
+    "slug": "golos-tvoy",
+    "title": "Голос твой"
+  },
+  {
+    "slug": "vesna-1929-g",
+    "title": "Весна 1929 г"
+  },
+  {
+    "slug": "nabor-slov",
+    "title": "набор слов"
+  },
+  {
+    "slug": "ozaril",
+    "title": "Озарил"
+  },
+  {
+    "slug": "legko",
+    "title": "Легко"
+  },
+  {
+    "slug": "pronosyatsya",
+    "title": "Проносятся"
+  },
+  {
+    "slug": "smotrit",
+    "title": "Смотрит"
+  },
+  {
+    "slug": "paganini",
+    "title": "Паганини"
+  },
+  {
+    "slug": "vyydu",
+    "title": "Выйду"
+  },
+  {
+    "slug": "nikto",
+    "title": "Никто"
+  },
+  {
+    "slug": "shevelyas",
+    "title": "Шевелясь"
+  },
+  {
+    "slug": "nikuda-ne-nado",
+    "title": "Никуда не надо"
+  },
+  {
+    "slug": "gluhaya",
+    "title": "Глухая"
+  },
+  {
+    "slug": "orya",
+    "title": "Оря"
+  },
+  {
+    "slug": "sdelay",
+    "title": "Сделай"
+  },
+  {
+    "slug": "moldaviya",
+    "title": "Молдавия"
+  },
+  {
+    "slug": "chrez",
+    "title": "Чрез"
+  },
+  {
+    "slug": "sorokovye",
+    "title": "Сороковые"
+  },
+  {
+    "slug": "goryat",
+    "title": "Горят"
+  },
+  {
+    "slug": "ostayotsya",
+    "title": "Остаётся"
+  },
+  {
+    "slug": "uhodit",
+    "title": "Уходит"
+  },
+  {
+    "slug": "ne-umer",
+    "title": "Не умер"
+  },
+  {
+    "slug": "na-otdalennom",
+    "title": "На отдаленном"
+  },
+  {
+    "slug": "vstrechaet",
+    "title": "Встречает"
+  },
+  {
+    "slug": "davay",
+    "title": "Давай"
+  },
+  {
+    "slug": "issyaknesh",
+    "title": "Иссякнешь"
+  },
+  {
+    "slug": "trinadtsat",
+    "title": "Тринадцать"
+  },
+  {
+    "slug": "kino",
+    "title": "Кино"
+  },
+  {
+    "slug": "moskva-posle-shtorma",
+    "title": "Москва после шторма"
+  },
+  {
+    "slug": "pomnitsya",
+    "title": "Помнится"
+  },
+  {
+    "slug": "ko-dnu",
+    "title": "Ко дну"
+  },
+  {
+    "slug": "ty-vidish",
+    "title": "Ты видишь"
+  },
+  {
+    "slug": "vinil",
+    "title": "Винил"
+  },
+  {
+    "slug": "kolyshetsya-osen",
+    "title": "Колышется осень"
+  },
+  {
+    "slug": "ty-segodnya",
+    "title": "Ты сегодня"
+  },
+  {
+    "slug": "litso-nochi",
+    "title": "Лицо ночи"
+  },
+  {
+    "slug": "zashepchutsya-li",
+    "title": "Зашепчутся ли"
+  },
+  {
+    "slug": "pod-nogami-skrezheshchet",
+    "title": "Под ногами скрежещет"
+  },
+  {
+    "slug": "ya-s-vodki-pereshel",
+    "title": "Я с водки перешел"
+  },
+  {
+    "slug": "shelest-selskogo-vechera",
+    "title": "Шелест сельского вечера"
+  },
+  {
+    "slug": "bezhat",
+    "title": "Бежать"
+  },
+  {
+    "slug": "vecher-poezii-1976-g",
+    "title": "Вечер поэзии 1976 г"
+  },
+  {
+    "slug": "nagrubi",
+    "title": "Нагруби"
+  },
+  {
+    "slug": "my-zamiraem-v-yanvare",
+    "title": "Мы замираем в январе"
+  },
+  {
+    "slug": "u-temnoy-statui",
+    "title": "У темной статуи"
+  },
+  {
+    "slug": "no-ne-slyshu",
+    "title": "Но не слышу"
+  },
+  {
+    "slug": "razbit",
+    "title": "Разбит"
+  },
+  {
+    "slug": "ne-proiznosil",
+    "title": "Не произносил"
+  },
+  {
+    "slug": "povod",
+    "title": "Повод"
+  },
+  {
+    "slug": "ne-ishchi",
+    "title": "Не ищи"
+  },
+  {
+    "slug": "vrashchaetsya",
+    "title": "Вращается"
+  },
+  {
+    "slug": "gorod-s-imenem-dalekim",
+    "title": "Город с именем далеким"
+  },
+  {
+    "slug": "more-darilo",
+    "title": "Море дарило"
+  },
+  {
+    "slug": "spi-i-ty",
+    "title": "Спи и ты"
+  },
+  {
+    "slug": "net-smerti",
+    "title": "Нет смерти"
+  },
+  {
+    "slug": "stanet",
+    "title": "Станет"
+  },
+  {
+    "slug": "zhit",
+    "title": "Жить"
+  },
+  {
+    "slug": "nablyudenie-prirody",
+    "title": "Наблюдение природы"
+  },
+  {
+    "slug": "lish-nachalo",
+    "title": "Лишь начало"
+  },
+  {
+    "slug": "kak-eta-noch",
+    "title": "Как эта ночь"
+  },
+  {
+    "slug": "vsyu-tmu-mirozdanya",
+    "title": "Всю тьму мирозданья"
+  },
+  {
+    "slug": "ty-szhimala",
+    "title": "Ты сжимала"
+  },
+  {
+    "slug": "ya-obozhayu-umnyh-lyudey",
+    "title": "Я обожаю умных людей"
+  },
+  {
+    "slug": "sovpadene",
+    "title": "Совпаденье"
+  },
+  {
+    "slug": "utrom",
+    "title": "Утром"
+  },
+  {
+    "slug": "oblik",
+    "title": "Облик"
+  },
+  {
+    "slug": "yugoslaviya",
+    "title": "Югославия"
+  },
+  {
+    "slug": "ubiytsa",
+    "title": "Убийца!"
+  },
+  {
+    "slug": "ishchu",
+    "title": "Ищу"
+  },
+  {
+    "slug": "yanvar",
+    "title": "Январь"
+  },
+  {
+    "slug": "za-mnogo-dney",
+    "title": "За много дней"
+  },
+  {
+    "slug": "shumeli-nuzhnye-derevya",
+    "title": "Шумели нужные деревья"
+  },
+  {
+    "slug": "koshkin-bog",
+    "title": "Кошкин бог"
+  },
+  {
+    "slug": "groza-derevev",
+    "title": "Гроза деревьев"
+  },
+  {
+    "slug": "vsyu-zimu",
+    "title": "Всю зиму"
+  },
+  {
+    "slug": "torfyaniki",
+    "title": "Торфяники"
+  },
+  {
+    "slug": "ruki-lit",
+    "title": "Руки лить"
+  },
+  {
+    "slug": "bushuyushchee",
+    "title": "Бушующее"
+  },
+  {
+    "slug": "donetsk-2014",
+    "title": "Донецк 2014"
+  },
+  {
+    "slug": "ostyla",
+    "title": "Остыла"
+  },
+  {
+    "slug": "umrut-slova",
+    "title": "Умрут слова"
+  },
+  {
+    "slug": "odno-lish",
+    "title": "Одно лишь"
+  },
+  {
+    "slug": "ya-ne-soldat",
+    "title": "Я не солдат"
+  },
+  {
+    "slug": "chuzhbina",
+    "title": "Чужбина"
+  },
+  {
+    "slug": "nemnogoslovna",
+    "title": "Немногословна"
+  },
+  {
+    "slug": "donetskiy-aeroport-2015",
+    "title": "Донецкий аэропорт 2015"
+  },
+  {
+    "slug": "svetloy-ulitsy-izgib",
+    "title": "Светлой улицы изгиб"
+  },
+  {
+    "slug": "priblizhayushchayasya-zima",
+    "title": "Приближающаяся зима"
+  },
+  {
+    "slug": "zamknulis-reki",
+    "title": "Замкнулись реки"
+  },
+  {
+    "slug": "obrazovav-voronku",
+    "title": "Образовав воронку"
+  },
+  {
+    "slug": "ty-uhodish",
+    "title": "Ты уходишь"
+  },
+  {
+    "slug": "kishechnoe-rasstroystvo-u-kota",
+    "title": "Кишечное расстройство у кота"
+  },
+  {
+    "slug": "razbilos",
+    "title": "Разбилось"
+  },
+  {
+    "slug": "net-ya-ne-pyu-za-etot-dom",
+    "title": "Нет, я не пью за этот дом"
+  },
+  {
+    "slug": "belel-dekbr",
+    "title": "Белел декбрь"
+  },
+  {
+    "slug": "pomnyu",
+    "title": "Помню"
+  },
+  {
+    "slug": "zveni-kak-vihr-gitara",
+    "title": "Звени, как вихрь, гитара"
+  },
+  {
+    "slug": "a-na-ulitse-tish-da-tish",
+    "title": "А на улице - тишь да тишь"
+  },
+  {
+    "slug": "kak-ya-lyublyu-tebya-v-razluke",
+    "title": "Как я люблю тебя в разлуке"
+  },
+  {
+    "slug": "goryachim-vihrem",
+    "title": "Горячим вихрем"
+  },
+  {
+    "slug": "vryvayutsya-v-sumrak-raskaty",
+    "title": "Врываются в сумрак раскаты"
+  },
+  {
+    "slug": "ugasnet-den-v-vysokih",
+    "title": "Угаснет день в высоких"
+  },
+  {
+    "slug": "ya-slyshu-zamedliv-shag",
+    "title": "Я слышу, замедлив шаг"
+  },
+  {
+    "slug": "hot-govori",
+    "title": "Хоть говори"
+  },
+  {
+    "slug": "fonari-okunulis",
+    "title": "Фонари окунулись"
+  },
+  {
+    "slug": "1945",
+    "title": "1945"
+  },
+  {
+    "slug": "dalekiy-moy-golos",
+    "title": "Далекий мой голос"
+  },
+  {
+    "slug": "i-rassypletsya",
+    "title": "И рассыплется"
+  },
+  {
+    "slug": "skolko-v-tebe-zhizni",
+    "title": "Сколько в тебе жизни!"
+  },
+  {
+    "slug": "tri-tsvetka",
+    "title": "Три цветка"
+  },
+  {
+    "slug": "bluzhdali-molnii",
+    "title": "Блуждали молнии"
+  },
+  {
+    "slug": "ne-ischeznet",
+    "title": "Не исчезнет"
+  },
+  {
+    "slug": "pust-gluboki",
+    "title": "Пусть глубоки"
+  },
+  {
+    "slug": "snos-lenina",
+    "title": "Снос Ленина"
+  },
+  {
+    "slug": "po-rekam",
+    "title": "По рекам"
+  },
+  {
+    "slug": "prisnilis-nebu-topolya",
+    "title": "Приснились небу тополя"
+  },
+  {
+    "slug": "sredi-domov",
+    "title": "Среди домов"
+  },
+  {
+    "slug": "ya-vizhu-vremya",
+    "title": "Я вижу время"
+  },
+  {
+    "slug": "sneg-ischezaet",
+    "title": "Снег исчезает"
+  },
+  {
+    "slug": "slyshitsya-veter",
+    "title": "Слышится ветер"
+  },
+  {
+    "slug": "segodnya-ya-uvidel",
+    "title": "Сегодня я увидел"
+  },
+  {
+    "slug": "my-izobrazit",
+    "title": "Мы изобразить"
+  },
+  {
+    "slug": "merknet-tishina",
+    "title": "Меркнет тишина"
+  },
+  {
+    "slug": "ostaneshsya",
+    "title": "Останешься"
+  },
+  {
+    "slug": "ya-zapomnyu-tebya-takoy",
+    "title": "Я запомню тебя такой"
+  },
+  {
+    "slug": "unosit",
+    "title": "Уносит"
+  },
+  {
+    "slug": "1990",
+    "title": "1990"
+  },
+  {
+    "slug": "tam-gde-bessonno",
+    "title": "Там, где бессонно"
+  },
+  {
+    "slug": "besstyzhaya",
+    "title": "Бесстыжая"
+  },
+  {
+    "slug": "legla",
+    "title": "Легла"
+  },
+  {
+    "slug": "v-oranzhevom",
+    "title": "В оранжевом"
+  },
+  {
+    "slug": "ya-uslyshu",
+    "title": "Я услышу"
+  },
+  {
+    "slug": "izdaleka",
+    "title": "Издалека"
+  },
+  {
+    "slug": "hot-govori-2",
+    "title": "Хоть говори"
+  },
+  {
+    "slug": "zhara",
+    "title": "Жара"
+  },
+  {
+    "slug": "v-oktyabre",
+    "title": "В октябре"
+  },
+  {
+    "slug": "dni",
+    "title": "Дни"
+  },
+  {
+    "slug": "ty-v-obuvi",
+    "title": "Ты в обуви"
+  },
+  {
+    "slug": "o-smerti",
+    "title": "О смерти"
+  },
+  {
+    "slug": "stalingrad",
+    "title": "Сталинград"
+  },
+  {
+    "slug": "ty-pishesh-pisma-pocherkom-pryamym",
+    "title": "Ты пишешь письма почерком прямым"
+  },
+  {
+    "slug": "i-mne-fonar-kival",
+    "title": "И мне фонарь кивал"
+  },
+  {
+    "slug": "obduy",
+    "title": "Обдуй"
+  },
+  {
+    "slug": "posredi-nochnogo-kluba",
+    "title": "Посреди ночного клуба"
   }
 ]
