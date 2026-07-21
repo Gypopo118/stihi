@@ -86,13 +86,19 @@ let activeSlug   = null;
 let openedAt     = null;
 let activeQuery  = '';   // последний поисковый запрос (для подсветки в стихе)
 let searchTimer  = null;
-
+const poemList        = document.getElementById('poemList');
+const poemDisplay     = document.getElementById('poemDisplay');
+const contentPanel    = document.getElementById('contentPanel');
+const sidebar         = document.getElementById('sidebar');
+const siteFooter      = document.getElementById('siteFooter');
+const backToListBtn   = document.getElementById('backToListBtn');
 /* ── DOM refs ── */
 const poemList        = document.getElementById('poemList');
 const poemDisplay     = document.getElementById('poemDisplay');
 const contentPanel    = document.getElementById('contentPanel');
 const sidebar         = document.getElementById('sidebar');
 const siteFooter      = document.getElementById('siteFooter');
+
 
 const searchOverlay   = document.getElementById('searchOverlay');
 const searchInput     = document.getElementById('searchInput');
@@ -425,6 +431,11 @@ function plural(n, one, few, many) {
 
 /* Лупы */
 searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
+/* Лупы */
+searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
+
+/* Кнопка "назад к списку" (мобильная) */
+if (backToListBtn) backToListBtn.addEventListener('click', showList);
 
 /* Закрыть */
 searchCloseBtn.addEventListener('click', closeSearch);
