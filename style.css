@@ -704,3 +704,35 @@ body::before {
     max-height: 85dvh;
   }
 }
+
+/* ===== КНОПКА "НАЗАД К СПИСКУ" (мобильный) ===== */
+.back-to-list-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .back-to-list-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    right: 1.1rem;
+    bottom: calc(1.2rem + env(safe-area-inset-bottom, 0px));
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-panel-hover);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+    z-index: 15;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    -webkit-tap-highlight-color: transparent;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .back-to-list-btn:active {
+    background: var(--gold);
+    color: var(--bg-dark);
+  }
+}
