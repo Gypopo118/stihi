@@ -691,6 +691,9 @@ body::before {
   .poem-body {
     font-size: 1.05rem;
   }
+  .poem-date {
+    text-align: left;
+  }
 
   /* Панель поиска на мобильном — на весь экран */
   .search-overlay {
