@@ -431,6 +431,68 @@ searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
 
 /* Кнопка "назад к списку" (мобильная) */
 if (backToListBtn) backToListBtn.addEventListener('click', showList);
+/* Кнопка "назад к списку" (мобильная) */
+if (backToListBtn) backToListBtn.addEventListener('click', showList);
+
+/* ── Свайп-переключение на следующее стихотворение (мобильный, конец текста) ── */
+const SWIPE_NEXT_RATIO = 0.18;   // доля высоты экрана — порог протягивания
+const SWIPE_ANGLE_LOCK = 2.5;    // ΔY должен быть в это число раз больше ΔX
+
+function isScrolledToBottom(el) {
+  return el.scrollHeight - el.scrollTop - el.clientHeight <= 2;
+}
+
+function goToNextPoem() {
+  const idx = poems.findIndex(p => p.slug === activeSlug);
+  if (idx === -1 || idx >= poems.length - 1) return; // дальше стихотворений нет
+  openPoem(poems[idx + 1].slug, true);
+  contentPanel.scrollTop = 0;
+}
+
+let pullStartX = null;
+let pullStartY = null;
+let pullTriggered = false;
+
+contentPanel.addEventListener('touchstart', e => {
+  if (!isMobile()) return;
+  pullTriggered = false;
+  pullStartX = null;
+  pullStartY = null;
+  const t = e.touches[0];
+  if (isScrolledToBottom(contentPanel)) {
+    pullStartX = t.clientX;
+    pullStartY = t.clientY;
+  }
+}, { passive: true });
+
+contentPanel.addEventListener('touchmove', e => {
+  if (!isMobile() || pullTriggered) return;
+  const t = e.touches[0];
+
+  if (pullStartY === null) {
+    if (isScrolledToBottom(contentPanel)) {
+      pullStartX = t.clientX;
+      pullStartY = t.clientY;
+    }
+    return;
+  }
+
+  const deltaY = pullStartY - t.clientY;   // положительное значение — палец идёт вверх
+  const deltaX = Math.abs(t.clientX - pullStartX);
+  if (deltaY <= 0) return;
+
+  const threshold = window.innerHeight * SWIPE_NEXT_RATIO;
+  if (deltaY > threshold && deltaY > SWIPE_ANGLE_LOCK * deltaX) {
+    pullTriggered = true;
+    goToNextPoem();
+  }
+}, { passive: true });
+
+contentPanel.addEventListener('touchend', () => {
+  pullStartX = null;
+  pullStartY = null;
+  pullTriggered = false;
+});
 
 /* Закрыть */
 searchCloseBtn.addEventListener('click', closeSearch);
