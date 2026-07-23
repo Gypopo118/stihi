@@ -218,7 +218,7 @@ body::before {
 }
 
 .poem-item.visited {
-  color: var(--accent-visited);
+  color: #8a703d; /* Тёмно-золотистый / бронзовый */
 }
 
 .poem-item.visited.active {
@@ -756,5 +756,21 @@ body::before {
     transform: translateY(100%);
     pointer-events: none;
     z-index: 14;
+  }
+}
+
+/* Анимация проявления и залета снизу */
+.poem-animate-enter {
+  animation: poemSlideIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes poemSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(45px); /* Увеличена дистанция вылета */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

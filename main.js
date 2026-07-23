@@ -254,12 +254,21 @@ async function openPoem(slug, pushState, query) {
     ? '<div class="poem-date">' + escHtml(date) + '</div>'
     : '';
 
+  /* Стало: добавили класс poem-animate-enter и принудительный reflow */
   poemDisplay.innerHTML =
-    '<div class="poem-inner">' +
+    '<div class="poem-inner poem-animate-enter">' +
     '<h1 class="poem-title">' + titleHtml + '</h1>' +
     '<div class="poem-body">' + bodyHtml + '</div>' +
     dateHtml +
     '</div>';
+
+  /* Форсируем перезапуск анимации (reflow) для браузера */
+  const animatedEl = poemDisplay.querySelector('.poem-inner');
+  if (animatedEl) {
+    animatedEl.classList.remove('poem-animate-enter');
+    void animatedEl.offsetWidth; // сброс кадров
+    animatedEl.classList.add('poem-animate-enter');
+  }
 
   /* Прокрутить к первому совпадению */
   if (activeQuery) {
