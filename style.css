@@ -218,7 +218,7 @@ body::before {
 }
 
 .poem-item.visited {
-  color: var(--accent-visited);
+  color: #8a703d; /* Тёмно-золотистый / бронзовый */
 }
 
 .poem-item.visited.active {
