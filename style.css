@@ -688,7 +688,11 @@ body::before {
     margin: 0;
   }
 
-  .poem-body {
+.poem-body {
+    font-size: 1.18rem;
+  }
+
+  .poem-item {
     font-size: 1.05rem;
   }
   .poem-date {
