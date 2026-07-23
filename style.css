@@ -712,6 +712,9 @@ body::before {
 .back-to-list-btn {
   display: none;
 }
+.pull-indicator {
+  display: none;
+}
 
 @media (max-width: 768px) {
   .back-to-list-btn {
@@ -737,5 +740,17 @@ body::before {
   .back-to-list-btn:active {
     background: var(--gold);
     color: var(--bg-dark);
+  }
+  .pull-indicator {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10dvh;
+    background: linear-gradient(to bottom, rgba(200, 169, 110, 0) 0%, var(--gold-bright) 100%);
+    transform: translateY(100%);
+    pointer-events: none;
+    z-index: 14;
   }
 }
