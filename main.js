@@ -94,6 +94,7 @@ const contentPanel    = document.getElementById('contentPanel');
 const sidebar         = document.getElementById('sidebar');
 const siteFooter      = document.getElementById('siteFooter');
 const backToListBtn   = document.getElementById('backToListBtn');
+const pullIndicator   = document.getElementById('pullIndicator');
 
 const searchOverlay   = document.getElementById('searchOverlay');
 const searchInput     = document.getElementById('searchInput');
@@ -421,22 +422,15 @@ function plural(n, one, few, many) {
 }
 
 /* ═══════════════════════════════════════════════════
-   СОБЫТИЯ
+   СВАЙП-ПЕРЕКЛЮЧЕНИЕ НА СЛЕДУЮЩЕЕ СТИХОТВОРЕНИЕ
+   (мобильный, срабатывает при протягивании вверх
+   после того как текст долистан до конца)
    ═══════════════════════════════════════════════════ */
 
-/* Лупы */
-searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
-/* Лупы */
-searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
-
-/* Кнопка "назад к списку" (мобильная) */
-if (backToListBtn) backToListBtn.addEventListener('click', showList);
-/* Кнопка "назад к списку" (мобильная) */
-if (backToListBtn) backToListBtn.addEventListener('click', showList);
-
-/* ── Свайп-переключение на следующее стихотворение (мобильный, конец текста) ── */
-const SWIPE_NEXT_RATIO = 0.18;   // доля высоты экрана — порог протягивания
-const SWIPE_ANGLE_LOCK = 2.5;    // ΔY должен быть в это число раз больше ΔX
+const SWIPE_NEXT_RATIO   = 0.18;   // доля высоты экрана — порог протягивания
+const SWIPE_ANGLE_LOCK   = 2.5;    // ΔY должен быть в это число раз больше ΔX
+const PULL_RELEASE_MS    = 550;    // как долго полоса уезжает вниз после успешного переключения
+const PULL_SNAPBACK_MS   = 180;    // как быстро полоса прячется, если палец отпущен раньше порога
 
 function isScrolledToBottom(el) {
   return el.scrollHeight - el.scrollTop - el.clientHeight <= 2;
@@ -449,6 +443,20 @@ function goToNextPoem() {
   contentPanel.scrollTop = 0;
 }
 
+/* Полоса-индикатор протягивания: 0 = спрятана, 1 = вытянута полностью */
+function setPullProgress(progress) {
+  if (!pullIndicator) return;
+  pullIndicator.style.transition = 'none';
+  pullIndicator.style.transform = 'translateY(' + (1 - progress) * 100 + '%)';
+}
+
+function hidePullIndicator(durationMs) {
+  if (!pullIndicator) return;
+  void pullIndicator.offsetHeight; // форсируем перерасчёт стилей, чтобы transition применился
+  pullIndicator.style.transition = 'transform ' + durationMs + 'ms ease';
+  pullIndicator.style.transform = 'translateY(100%)';
+}
+
 let pullStartX = null;
 let pullStartY = null;
 let pullTriggered = false;
@@ -458,6 +466,7 @@ contentPanel.addEventListener('touchstart', e => {
   pullTriggered = false;
   pullStartX = null;
   pullStartY = null;
+  setPullProgress(0);
   const t = e.touches[0];
   if (isScrolledToBottom(contentPanel)) {
     pullStartX = t.clientX;
@@ -479,20 +488,40 @@ contentPanel.addEventListener('touchmove', e => {
 
   const deltaY = pullStartY - t.clientY;   // положительное значение — палец идёт вверх
   const deltaX = Math.abs(t.clientX - pullStartX);
-  if (deltaY <= 0) return;
+  if (deltaY <= 0) {
+    setPullProgress(0);
+    return;
+  }
 
   const threshold = window.innerHeight * SWIPE_NEXT_RATIO;
+  const progress = Math.min(deltaY / threshold, 1);
+  setPullProgress(progress);
+
   if (deltaY > threshold && deltaY > SWIPE_ANGLE_LOCK * deltaX) {
     pullTriggered = true;
+    hidePullIndicator(PULL_RELEASE_MS);
     goToNextPoem();
   }
 }, { passive: true });
 
 contentPanel.addEventListener('touchend', () => {
+  if (!pullTriggered) {
+    hidePullIndicator(PULL_SNAPBACK_MS);
+  }
   pullStartX = null;
   pullStartY = null;
   pullTriggered = false;
 });
+
+/* ═══════════════════════════════════════════════════
+   СОБЫТИЯ
+   ═══════════════════════════════════════════════════ */
+
+/* Лупы */
+searchBtns.forEach(btn => btn.addEventListener('click', openSearch));
+
+/* Кнопка "назад к списку" (мобильная) */
+if (backToListBtn) backToListBtn.addEventListener('click', showList);
 
 /* Закрыть */
 searchCloseBtn.addEventListener('click', closeSearch);
