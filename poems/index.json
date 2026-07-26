@@ -854,5 +854,9 @@
   {
     "slug": "i-mne-fonar-kival",
     "title": "И мне фонарь кивал"
+  },
+  {
+    "slug": "test",
+    "title": "тест"
   }
 ]
