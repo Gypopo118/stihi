@@ -49,7 +49,7 @@ function parsePoemText(raw) {
   return raw.split(/\n{2,}/)
     .map(s => {
       const lines = s.trim().split('\n').map(l => l.trimEnd()).filter(Boolean);
-      return lines.length ? '<p>' + lines.join('<br>') + '</p>' : '';
+      return lines.length ? '<p>' + lines.map(escHtml).join('<br>') + '</p>' : '';
     })
     .filter(Boolean)
     .join('\n');
@@ -122,14 +122,28 @@ const year = '© ' + new Date().getFullYear();
 
 async function loadIndex() {
   try {
-    const res = await fetch('poems/index.json');
+    const res = await fetch('/poems/index.json');
     if (!res.ok) throw new Error('index.json not found');
     poems = await res.json();
     renderList();
 
-    const hash = location.hash.replace('#', '');
-    if (hash && poems.find(p => p.slug === hash)) {
-      openPoem(hash, false);
+    /* Страница открыта напрямую как /slug/ (обновление, прямая ссылка, переход из поисковика):
+       generate-seo.py вкладывает данные о стихотворении в window.__POEM_PRERENDER__,
+       чтобы не делать лишний fetch и сразу открыть нужное стихотворение в полном интерфейсе. */
+    const prerendered = window.__POEM_PRERENDER__;
+    if (prerendered && prerendered.slug) {
+      const { slug, title, date, body } = prerendered;
+      const lines = body.split('\n').map(l => l.trim()).filter(Boolean);
+      poemCache[slug] = { title, date, body, lines };
+      history.replaceState({ slug }, '', '/' + slug + '/');
+      openPoem(slug, false);
+    } else {
+      const hash = location.hash.replace('#', '');
+      if (hash && poems.find(p => p.slug === hash)) {
+        /* Старые ссылки вида /#slug переводим на индексируемый постоянный адрес. */
+        history.replaceState({ slug: hash }, '', '/' + hash + '/');
+        openPoem(hash, false);
+      }
     }
 
     /* Начать фоновую индексацию */
@@ -145,7 +159,7 @@ async function indexPoems() {
   for (const { slug } of poems) {
     if (poemCache[slug]) continue;
     try {
-      const res = await fetch('poems/' + slug + '.md');
+      const res = await fetch('/poems/' + slug + '.md');
       if (!res.ok) continue;
       const raw = await res.text();
       const { title, date, body } = parseFrontmatter(raw);
@@ -165,13 +179,12 @@ function renderList() {
   const visited = getVisited();
   poemList.innerHTML = '';
   poems.forEach(({ slug, title }) => {
-    const item = document.createElement('div');
+    const item = document.createElement('a');
     item.className = 'poem-item' +
       (slug === activeSlug ? ' active' : '') +
       (visited.includes(slug) ? ' visited' : '');
     item.dataset.slug = slug;
-    item.setAttribute('role', 'button');
-    item.setAttribute('tabindex', '0');
+    item.href = '/' + slug + '/';
     item.setAttribute('aria-label', title);
 
     const bullet = document.createElement('span');
@@ -183,9 +196,9 @@ function renderList() {
 
     item.appendChild(bullet);
     item.appendChild(label);
-    item.addEventListener('click', () => openPoem(slug, true));
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') openPoem(slug, true);
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      openPoem(slug, true);
     });
     poemList.appendChild(item);
   });
@@ -213,7 +226,7 @@ async function openPoem(slug, pushState, query) {
 
   poemDisplay.innerHTML = '<div class="poem-loading">Загрузка…</div>';
 
-  if (pushState) history.pushState({ slug }, '', '#' + slug);
+  if (pushState) history.pushState({ slug }, '', '/' + slug + '/');
 
   if (isMobile()) {
     sidebar.classList.add('hidden-mobile');
@@ -226,7 +239,7 @@ async function openPoem(slug, pushState, query) {
   let data = poemCache[slug];
   if (!data) {
     try {
-      const res = await fetch('poems/' + slug + '.md');
+      const res = await fetch('/poems/' + slug + '.md');
       if (!res.ok) throw new Error('Not found');
       const raw = await res.text();
       const { title, date, body } = parseFrontmatter(raw);
