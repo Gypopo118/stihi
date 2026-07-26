@@ -204,6 +204,7 @@ body::before {
   border-left: 2px solid transparent;
   line-height: 1.4;
   user-select: none;
+  text-decoration: none;
 }
 
 .poem-item:hover {

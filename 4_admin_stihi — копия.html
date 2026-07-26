@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Управление стихотворениями — Админка</title>
+<style>
+  :root {
+    --bg-color: #121212;
+    --panel-bg: #1e1e1e;
+    --accent-color: #c8a051;
+    --text-color: #e0e0e0;
+    --border-color: #333333;
+    --danger-color: #d9534f;
+    --success-color: #2e7d32;
+  }
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1, h2 { color: var(--accent-color); }
+  h1 { font-size: 1.4rem; }
+  h2 { font-size: 1.1rem; margin-top: 0; }
+  .card {
+    background: var(--panel-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+  }
+  label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+  input[type="text"], input[type="password"], input[type="search"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background: #2a2a2a;
+    border: 1px solid var(--border-color);
+    color: #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.95rem;
+  }
+  textarea { height: 220px; font-family: 'SF Mono', Consolas, monospace; line-height: 1.5; }
+  button {
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    padding: 10px 18px;
+    margin-top: 15px;
+    margin-right: 8px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:hover { opacity: 0.9; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button.btn-danger { background: var(--danger-color); color: #fff; }
+  button.btn-secondary { background: #444; color: #fff; }
+
+  .poem-list { list-style: none; padding: 0; margin-top: 15px; }
+  .poem-item {
+    background: #2a2a2a;
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: grab;
+    border: 1px solid var(--border-color);
+    gap: 10px;
+  }
+  .poem-item.dragging { opacity: 0.4; }
+  .poem-item.draft { opacity: 0.55; border-style: dashed; border-color: var(--accent-color); }
+  .drop-indicator {
+    height: 3px;
+    background: var(--accent-color);
+    margin: 0 0 8px 0;
+    border-radius: 2px;
+    list-style: none;
+    pointer-events: none;
+  }
+  .poem-item .info { min-width: 0; }
+  .poem-item .info strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .poem-item .meta { font-size: 0.78rem; color: #999; }
+  .actions { display: flex; gap: 5px; flex-shrink: 0; }
+  .actions button { margin: 0; padding: 6px 10px; font-size: 0.8rem; white-space: nowrap; }
+
+  .status-msg { margin-top: 10px; padding: 10px; border-radius: 4px; display: none; font-size: 0.9rem; }
+  .status-success { background: var(--success-color); color: #fff; }
+  .status-error { background: #c62828; color: #fff; }
+  .status-info { background: #37474f; color: #fff; }
+
+  .hint { font-size: 0.85rem; color: #999; margin-top: 4px; }
+  .count-badge {
+    display: inline-block;
+    background: #333;
+    color: var(--accent-color);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Панель управления стихотворениями</h1>
+
+  <!-- Авторизация -->
+  <div class="card" id="authCard">
+    <h2>1. Авторизация</h2>
+    <label for="ghToken">GitHub Personal Access Token:</label>
+    <input type="password" id="ghToken" placeholder="ghp_XXXXXXXXXXXXXXXXXXXX">
+    <div class="hint">Токен хранится только в localStorage этого браузера, никуда не отправляется, кроме api.github.com.</div>
+    <button onclick="saveToken()">Сохранить и загрузить данные</button>
+    <div id="authStatus" class="status-msg"></div>
+  </div>
+
+  <!-- Форма -->
+  <div class="card" id="editorCard">
+    <h2 id="formTitle">2. Добавить стихотворение</h2>
+    <input type="hidden" id="editSlug">
+
+    <label for="poemTitle">Название стихотворения:</label>
+    <input type="text" id="poemTitle" placeholder="Заголовок">
+
+    <label for="poemDate">Дата:</label>
+    <input type="text" id="poemDate" placeholder="ДД.ММ.ГГГГ (например, 21.06.2006)">
+
+    <label for="poemBody">Текст стихотворения:</label>
+    <textarea id="poemBody" placeholder="Введите текст..."></textarea>
+
+    <div style="margin-top: 15px;">
+      <label style="display:inline; font-weight: normal;">
+        <input type="checkbox" id="poemDraft" style="width:auto; display:inline;"> Скрыть (черновик)
+      </label>
+    </div>
+
+    <button onclick="savePoem()" id="saveBtn">Опубликовать</button>
+    <button onclick="resetForm()" class="btn-secondary">Сбросить форму</button>
+    <div id="statusMsg" class="status-msg"></div>
+  </div>
+
+  <!-- Список и порядок -->
+  <div class="card">
+    <h2>3. Список и порядок <span class="count-badge" id="countBadge">0</span></h2>
+    <p class="hint">Перетаскивайте элементы мышкой или пальцем для изменения порядка на сайте.</p>
+    <input type="search" id="filterInput" placeholder="Поиск по названию…" oninput="renderDragList()">
+    <ul class="poem-list" id="dragList"></ul>
+    <button onclick="saveOrder()" class="btn-secondary">Сохранить новый порядок</button>
+    <button onclick="loadAllData()" class="btn-secondary">Обновить список</button>
+    <div id="orderStatus" class="status-msg"></div>
+  </div>
+</div>
+
+<script>
+  const REPO   = 'Gypopo118/stihi';
+  const BRANCH = 'main';       // админка всегда работает только с этой веткой, независимо от того, что настроено как default branch
+  const API    = 'https://api.github.com';
+
+  let token = localStorage.getItem('gh_token') || '';
+  let poemsData = [];   // [{slug, title, date, draft, body, sha}]
+  let orderList = [];   // [slug, slug, ...] — единственный источник правды о порядке
+
+  let dragIndicator = null;
+  function getDragIndicator() {
+    if (!dragIndicator) {
+      dragIndicator = document.createElement('li');
+      dragIndicator.className = 'drop-indicator';
+    }
+    return dragIndicator;
+  }
+
+  if (token) document.getElementById('ghToken').value = token;
+
+  function saveToken() {
+    token = document.getElementById('ghToken').value.trim();
+    if (!token) return showStatus('authStatus', 'Введите токен', false);
+    localStorage.setItem('gh_token', token);
+    showStatus('authStatus', 'Токен сохранён, загружаю данные…', true);
+    loadAllData();
+  }
+
+  function showStatus(elId, msg, isSuccess) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = 'status-msg ' + (isSuccess === null ? 'status-info' : isSuccess ? 'status-success' : 'status-error');
+    el.style.display = 'block';
+    if (isSuccess !== null) setTimeout(() => { el.style.display = 'none'; }, 4500);
+  }
+
+  function ghHeaders() {
+    return {
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/vnd.github+json'
+    };
+  }
+
+  /* ── транслитерация slug — та же схема, что в скрипте массового импорта ── */
+  const TRANSLIT = {
+    'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh',
+    'з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o',
+    'п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts',
+    'ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'
+  };
+  function slugify(text) {
+    return text.toLowerCase()
+      .split('')
+      .map(ch => TRANSLIT[ch] !== undefined ? TRANSLIT[ch] : (/[a-z0-9]/.test(ch) ? ch : '-'))
+      .join('')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  /* Возвращает slug, гарантированно не занятый в poemsData (кроме excludeSlug) */
+  function uniqueSlug(baseSlug, excludeSlug) {
+    let slug = baseSlug, i = 2;
+    const taken = s => poemsData.some(p => p.slug === s && p.slug !== excludeSlug);
+    while (taken(slug)) { slug = `${baseSlug}-${i}`; i++; }
+    return slug;
+  }
+
+  /* ── UTF-8-безопасное base64 ── */
+  function utf8_to_b64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+  function b64_to_utf8(str) {
+    const binary = atob(str.replace(/\n/g, ''));
+    const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  /* ── Markdown с frontmatter ── */
+  function buildMarkdown(title, date, body, isDraft) {
+    let fm = `---\ntitle: "${title}"\n`;
+    if (date) fm += `date: ${date}\n`;
+    if (isDraft) fm += `draft: true\n`;
+    fm += `---\n${body.trim()}\n`;
+    return fm;
+  }
+
+  function parseMarkdown(raw) {
+    const fmMatch = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+    if (!fmMatch) return { title: '', date: '', draft: false, body: raw.trim() };
+    const meta = {};
+    fmMatch[1].split('\n').forEach(line => {
+      const m = line.match(/^(\w+):\s*"?([^"]*)"?\s*$/);
+      if (m) meta[m[1].trim()] = m[2].trim();
+    });
+    return {
+      title: meta.title || '',
+      date: meta.date || '',
+      draft: meta.draft === 'true',
+      body: fmMatch[2].trim()
+    };
+  }
+
+  /* ── Загрузка данных ── */
+  async function refreshPoemsDataOnly() {
+    const poemsRes = await fetch(`${API}/repos/${REPO}/contents/poems?ref=${BRANCH}`, { headers: ghHeaders() });
+    if (!poemsRes.ok) throw new Error('Ошибка загрузки списка стихов (' + poemsRes.status + ')');
+    const files = await poemsRes.json();
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+
+    poemsData = await Promise.all(mdFiles.map(async file => {
+      const slug = file.name.replace(/\.md$/, '');
+      const fileRes = await fetch(file.url, { headers: ghHeaders() });
+      const fileData = await fileRes.json();
+      const parsed = parseMarkdown(b64_to_utf8(fileData.content));
+      return { slug, ...parsed, sha: fileData.sha };
+    }));
+
+    document.getElementById('countBadge').textContent = poemsData.length;
+    renderDragList();
+  }
+  async function loadAllData() {
+    if (!token) return;
+    try {
+      showStatus('orderStatus', 'Загружаю…', null);
+
+      const orderRes = await fetch(`${API}/repos/${REPO}/contents/order.txt?ref=${BRANCH}`, { headers: ghHeaders() });
+      orderList = [];
+      if (orderRes.ok) {
+        const orderData = await orderRes.json();
+        orderList = b64_to_utf8(orderData.content).split('\n').map(s => s.trim()).filter(Boolean);
+      } else if (orderRes.status !== 404) {
+        throw new Error('Не удалось загрузить order.txt (' + orderRes.status + ')');
+      }
+
+      const poemsRes = await fetch(`${API}/repos/${REPO}/contents/poems?ref=${BRANCH}`, { headers: ghHeaders() });
+      if (!poemsRes.ok) throw new Error('Ошибка загрузки списка стихов (' + poemsRes.status + ')');
+      const files = await poemsRes.json();
+      const mdFiles = files.filter(f => f.name.endsWith('.md'));
+
+      poemsData = await Promise.all(mdFiles.map(async file => {
+        const slug = file.name.replace(/\.md$/, '');
+        const fileRes = await fetch(file.url, { headers: ghHeaders() });
+        const fileData = await fileRes.json();
+        const parsed = parseMarkdown(b64_to_utf8(fileData.content));
+        return { slug, ...parsed, sha: fileData.sha };
+      }));
+
+      document.getElementById('countBadge').textContent = poemsData.length;
+      renderDragList();
+      document.getElementById('orderStatus').style.display = 'none';
+    } catch (e) {
+      showStatus('orderStatus', e.message, false);
+    }
+  }
+
+  /* ── Отрисовка списка ── */
+  function renderDragList() {
+    const ul = document.getElementById('dragList');
+    ul.innerHTML = '';
+
+    const filter = document.getElementById('filterInput').value.trim().toLowerCase();
+    const sortedSlugs = [...new Set([...orderList, ...poemsData.map(p => p.slug)])];
+
+    sortedSlugs.forEach(slug => {
+      const poem = poemsData.find(p => p.slug === slug);
+      if (!poem) return;
+      if (filter && !poem.title.toLowerCase().includes(filter) && !slug.includes(filter)) return;
+
+      const li = document.createElement('li');
+      li.className = 'poem-item' + (poem.draft ? ' draft' : '');
+      li.draggable = true;
+      li.dataset.slug = slug;
+      li.innerHTML = `
+        <div class="info">
+          <strong>${escapeHtml(poem.title || slug)}</strong>
+          <div class="meta">${escapeHtml(poem.date || 'без даты')}${poem.draft ? ' · СКРЫТО' : ''} · ${slug}.md</div>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" data-action="edit">Изм.</button>
+          <button class="btn-secondary" data-action="toggle">${poem.draft ? 'Показать' : 'Скрыть'}</button>
+          <button class="btn-danger" data-action="delete">Уд.</button>
+        </div>
+      `;
+      li.querySelector('[data-action="edit"]').addEventListener('click', () => editPoem(slug));
+      li.querySelector('[data-action="toggle"]').addEventListener('click', () => toggleDraft(slug));
+      li.querySelector('[data-action="delete"]').addEventListener('click', () => deletePoem(slug));
+
+     li.addEventListener('dragstart', e => {
+        li.classList.add('dragging');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', slug);
+        }
+      });
+      li.addEventListener('dragend', () => {
+        li.classList.remove('dragging');
+        const indicator = getDragIndicator();
+        if (indicator.parentNode) indicator.parentNode.removeChild(indicator);
+      });
+
+      ul.appendChild(li);
+    });
+
+    if (!ul.dataset.dragBound) {
+      ul.addEventListener('dragover', e => {
+        e.preventDefault();
+        const draggingItem = ul.querySelector('.dragging');
+        if (!draggingItem) return;
+        const indicator = getDragIndicator();
+        const siblings = [...ul.querySelectorAll('.poem-item:not(.dragging)')];
+        let nextSibling = null;
+        for (const sib of siblings) {
+          const rect = sib.getBoundingClientRect();
+          if (e.clientY < rect.top + rect.height / 2) {
+            nextSibling = sib;
+            break;
+          }
+        }
+        ul.insertBefore(indicator, nextSibling || null);
+      });
+
+      ul.addEventListener('drop', e => {
+        e.preventDefault();
+        const draggingItem = ul.querySelector('.dragging');
+        const indicator = getDragIndicator();
+        if (draggingItem && indicator.parentNode) {
+          ul.insertBefore(draggingItem, indicator);
+        }
+        if (indicator.parentNode) indicator.parentNode.removeChild(indicator);
+      });
+
+      ul.dataset.dragBound = '1';
+    }
+  }
+
+ function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* ── Обновление poems/index.json (список для сайта) ── */
+  async function updateIndexJson() {
+    const available = Object.fromEntries(
+      poemsData.filter(p => !p.draft).map(p => [p.slug, p.title])
+    );
+    const entries = [];
+    const seen = new Set();
+
+    orderList.forEach(slug => {
+      if (available[slug] && !seen.has(slug)) {
+        entries.push({ slug, title: available[slug] });
+        seen.add(slug);
+      }
+    });
+    Object.keys(available).sort().forEach(slug => {
+      if (!seen.has(slug)) {
+        entries.push({ slug, title: available[slug] });
+        seen.add(slug);
+      }
+    });
+
+    const content = JSON.stringify(entries, null, 2) + '\n';
+
+    const getRes = await fetch(`${API}/repos/${REPO}/contents/poems/index.json?ref=${BRANCH}`, { headers: ghHeaders() });
+    let sha = null;
+    if (getRes.ok) sha = (await getRes.json()).sha;
+
+    const payload = { message: 'Update poems index', content: utf8_to_b64(content), branch: BRANCH };
+    if (sha) payload.sha = sha;
+
+    const res = await fetch(`${API}/repos/${REPO}/contents/poems/index.json`, {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error('Не удалось обновить index.json: ' + (err.message || res.status));
+    }
+  }
+
+  /* ── Сохранение стихотворения ── */
+  async function savePoem() {
+    const title    = document.getElementById('poemTitle').value.trim();
+    const date     = document.getElementById('poemDate').value.trim();
+    const body     = document.getElementById('poemBody').value.trim();
+    const isDraft  = document.getElementById('poemDraft').checked;
+    const editSlug = document.getElementById('editSlug').value;
+    const saveBtn  = document.getElementById('saveBtn');
+
+    if (!title || !body) return showStatus('statusMsg', 'Заполните заголовок и текст', false);
+
+    let slug = editSlug || slugify(title);
+
+    /* Защита от коллизии: если это НЕ редактирование, а новый slug совпал с существующим файлом —
+       никогда не перезаписываем чужой файл молча. Предлагаем создать отдельный файл с суффиксом. */
+    if (!editSlug) {
+      const collision = poemsData.find(p => p.slug === slug);
+      if (collision) {
+        const suggested = uniqueSlug(slug, null);
+        const proceed = confirm(
+          `Уже существует стихотворение «${collision.title}» с таким же именем файла (${slug}.md).\n\n` +
+          `Нажмите OK, чтобы сохранить текущее стихотворение как отдельное произведение под именем ${suggested}.md.\n` +
+          `Нажмите «Отмена», чтобы изменить заголовок и сохранить снова.`
+        );
+        if (!proceed) return;
+        slug = suggested;
+      }
+    }
+
+    const markdown = buildMarkdown(title, date, body, isDraft);
+    const path = `poems/${slug}.md`;
+    const existingPoem = editSlug ? poemsData.find(p => p.slug === editSlug) : null;
+
+    const payload = {
+      message: editSlug ? `Update poem: ${slug}` : `Add poem: ${slug}`,
+      content: utf8_to_b64(markdown),
+      branch: BRANCH
+    };
+    if (existingPoem) payload.sha = existingPoem.sha; // sha передаём ТОЛЬКО в режиме явного редактирования
+
+    saveBtn.disabled = true;
+    try {
+      const res = await fetch(`${API}/repos/${REPO}/contents/${path}`, {
+        method: 'PUT',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error('Ошибка при сохранении файла: ' + (errBody.message || res.status));
+      }
+
+      if (!orderList.includes(slug)) {
+        orderList.unshift(slug);
+        await saveOrder(orderList);
+      }
+
+      showStatus('statusMsg', 'Стихотворение успешно сохранено', true);
+      resetForm();
+      await refreshPoemsDataOnly();
+      await updateIndexJson();
+    } catch (e) {
+      showStatus('statusMsg', e.message, false);
+    }
+  }
+
+  /* ── Сохранение порядка. Явно принимает массив; если не передан — читает текущий DOM
+     (актуально только сразу после drag&drop, когда DOM только что отражает решение пользователя). ── */
+  async function saveOrder(explicitOrder) {
+    const newOrder = explicitOrder || [...document.querySelectorAll('#dragList .poem-item')].map(li => li.dataset.slug);
+    const content = newOrder.join('\n') + '\n';
+
+    try {
+      const getRes = await fetch(`${API}/repos/${REPO}/contents/order.txt?ref=${BRANCH}`, { headers: ghHeaders() });
+      let sha = null;
+      if (getRes.ok) sha = (await getRes.json()).sha;
+
+      const payload = { message: 'Update poems order', content: utf8_to_b64(content), branch: BRANCH };
+      if (sha) payload.sha = sha;
+
+      const res = await fetch(`${API}/repos/${REPO}/contents/order.txt`, {
+        method: 'PUT',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error('Не удалось сохранить порядок: ' + (errBody.message || res.status));
+      }
+
+      orderList = newOrder;
+      showStatus('orderStatus', 'Порядок сохранён', true);
+    } catch (e) {
+      showStatus('orderStatus', e.message, false);
+      throw e;
+    }
+  }
+
+/* ── Скрыть / показать ── */
+  async function toggleDraft(slug) {
+    const poem = poemsData.find(p => p.slug === slug);
+    if (!poem) return;
+    const newDraft = !poem.draft;
+    const markdown = buildMarkdown(poem.title, poem.date, poem.body, newDraft);
+
+    try {
+      const res = await fetch(`${API}/repos/${REPO}/contents/poems/${slug}.md`, {
+        method: 'PUT',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Toggle draft status for ${slug}`,
+          content: utf8_to_b64(markdown),
+          sha: poem.sha,
+          branch: BRANCH
+        })
+      });
+      if (!res.ok) throw new Error('Не удалось изменить статус (' + res.status + ')');
+      const data = await res.json();
+      poem.sha = data.content.sha;
+      poem.draft = newDraft;
+      renderDragList();
+      await updateIndexJson();
+    } catch (e) {
+      showStatus('orderStatus', e.message, false);
+    }
+  }
+
+  /* ── Редактирование ── */
+  function editPoem(slug) {
+    const poem = poemsData.find(p => p.slug === slug);
+    if (!poem) return;
+    document.getElementById('editSlug').value = poem.slug;
+    document.getElementById('poemTitle').value = poem.title;
+    document.getElementById('poemDate').value = poem.date;
+    document.getElementById('poemBody').value = poem.body;
+    document.getElementById('poemDraft').checked = poem.draft;
+    document.getElementById('formTitle').textContent = 'Редактировать: ' + poem.title;
+    document.getElementById('saveBtn').textContent = 'Сохранить изменения';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── Удаление ── */
+  async function deletePoem(slug) {
+    const poem = poemsData.find(p => p.slug === slug);
+    if (!poem) return;
+    if (!confirm(`Удалить стихотворение «${poem.title}» (${slug}.md)? Это необратимо.`)) return;
+
+    try {
+      const res = await fetch(`${API}/repos/${REPO}/contents/poems/${slug}.md`, {
+        method: 'DELETE',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Delete poem: ${slug}`, sha: poem.sha, branch: BRANCH })
+      });
+      if (!res.ok) throw new Error('Не удалось удалить файл (' + res.status + ')');
+
+      await saveOrder(orderList.filter(s => s !== slug));
+      showStatus('orderStatus', 'Стихотворение удалено', true);
+      await loadAllData();
+      await updateIndexJson();
+    } catch (e) {
+      showStatus('orderStatus', e.message, false);
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('editSlug').value = '';
+    document.getElementById('poemTitle').value = '';
+    document.getElementById('poemDate').value = '';
+    document.getElementById('poemBody').value = '';
+    document.getElementById('poemDraft').checked = false;
+    document.getElementById('formTitle').textContent = '2. Добавить стихотворение';
+    document.getElementById('saveBtn').textContent = 'Опубликовать';
+  }
+
+  if (token) loadAllData();
+</script>
+</body>
+</html>

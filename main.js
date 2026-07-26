@@ -129,6 +129,8 @@ async function loadIndex() {
 
     const hash = location.hash.replace('#', '');
     if (hash && poems.find(p => p.slug === hash)) {
+      /* Старые ссылки вида /#slug переводим на индексируемый постоянный адрес. */
+      history.replaceState({ slug: hash }, '', '/' + hash + '/');
       openPoem(hash, false);
     }
 
@@ -165,13 +167,12 @@ function renderList() {
   const visited = getVisited();
   poemList.innerHTML = '';
   poems.forEach(({ slug, title }) => {
-    const item = document.createElement('div');
+    const item = document.createElement('a');
     item.className = 'poem-item' +
       (slug === activeSlug ? ' active' : '') +
       (visited.includes(slug) ? ' visited' : '');
     item.dataset.slug = slug;
-    item.setAttribute('role', 'button');
-    item.setAttribute('tabindex', '0');
+    item.href = '/' + slug + '/';
     item.setAttribute('aria-label', title);
 
     const bullet = document.createElement('span');
@@ -183,9 +184,9 @@ function renderList() {
 
     item.appendChild(bullet);
     item.appendChild(label);
-    item.addEventListener('click', () => openPoem(slug, true));
-    item.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') openPoem(slug, true);
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      openPoem(slug, true);
     });
     poemList.appendChild(item);
   });
@@ -213,7 +214,7 @@ async function openPoem(slug, pushState, query) {
 
   poemDisplay.innerHTML = '<div class="poem-loading">Загрузка…</div>';
 
-  if (pushState) history.pushState({ slug }, '', '#' + slug);
+  if (pushState) history.pushState({ slug }, '', '/' + slug + '/');
 
   if (isMobile()) {
     sidebar.classList.add('hidden-mobile');
