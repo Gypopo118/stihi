@@ -122,7 +122,7 @@ const year = '© ' + new Date().getFullYear();
 
 async function loadIndex() {
   try {
-    const res = await fetch('poems/index.json');
+    const res = await fetch('/poems/index.json');
     if (!res.ok) throw new Error('index.json not found');
     poems = await res.json();
     renderList();
@@ -159,7 +159,7 @@ async function indexPoems() {
   for (const { slug } of poems) {
     if (poemCache[slug]) continue;
     try {
-      const res = await fetch('poems/' + slug + '.md');
+      const res = await fetch('/poems/' + slug + '.md');
       if (!res.ok) continue;
       const raw = await res.text();
       const { title, date, body } = parseFrontmatter(raw);
@@ -239,7 +239,7 @@ async function openPoem(slug, pushState, query) {
   let data = poemCache[slug];
   if (!data) {
     try {
-      const res = await fetch('poems/' + slug + '.md');
+      const res = await fetch('/poems/' + slug + '.md');
       if (!res.ok) throw new Error('Not found');
       const raw = await res.text();
       const { title, date, body } = parseFrontmatter(raw);
