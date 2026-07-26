@@ -848,15 +848,11 @@
     "title": "Ты пишешь письма почерком прямым"
   },
   {
-    "slug": "obduy",
-    "title": "Обдуй"
-  },
-  {
     "slug": "i-mne-fonar-kival",
     "title": "И мне фонарь кивал"
   },
   {
-    "slug": "test",
-    "title": "тест"
+    "slug": "obduy",
+    "title": "Обдуй"
   }
 ]
