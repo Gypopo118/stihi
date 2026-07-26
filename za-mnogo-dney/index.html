@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <script>document.documentElement.className += " js";</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>За много дней - Алексей Захарчук</title>
@@ -10,25 +11,40 @@
   <meta property="og:title" content="За много дней - Алексей Захарчук">
   <meta property="og:description" content="За много дней - стихотворение Алексея Захарчука. За много дней запомнилось молчанье, И пара слез, фальшивых, может быть, Часов старинных черное стучанье, И">
   <meta property="og:url" content="https://zaharchuk-stihi.pages.dev/za-mnogo-dney/">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <style>
-    body { height: auto; min-height: 100vh; overflow: auto; }
-    .seo-poem { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem; }
-    .seo-poem__back { color: var(--gold); text-decoration: none; }
-    .seo-poem h1 { margin: 2.5rem 0 0.4rem; color: var(--gold-bright); font-family: var(--font-display); font-weight: 400; }
-    .seo-poem time { color: var(--text-dim); }
-    .seo-poem__text { margin-top: 2rem; font-family: var(--font-poem); font-size: 1.2rem; line-height: 1.65; }
-    .seo-poem__text p { margin: 0 0 1.25rem; }
-  </style>
+    html:not(.js) header.site-header,
+    html:not(.js) main.layout,
+    html:not(.js) footer.site-footer-desktop,
+    html:not(.js) .search-overlay { display: none !important; }
+</style>
 </head>
 <body>
+
   <div class="light-source" aria-hidden="true"></div>
-  <main class="seo-poem">
-    <a class="seo-poem__back" href="/">Все стихотворения</a>
-    <article>
-      <h1>За много дней</h1>
-      <time datetime="27.12.2015">27.12.2015</time>
-      <div class="seo-poem__text"><p>За много дней запомнилось молчанье,<br>
+
+  <!-- Показывается только если JavaScript отключён (боты без JS, читалки и т.п.) -->
+  <noscript>
+    <style>
+      body { height: auto; min-height: 100vh; overflow: auto; }
+      .seo-poem { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem; }
+      .seo-poem__back { color: var(--gold); text-decoration: none; }
+      .seo-poem h1 { margin: 2.5rem 0 0.4rem; color: var(--gold-bright); font-family: var(--font-display); font-weight: 400; }
+      .seo-poem time { color: var(--text-dim); }
+      .seo-poem__text { margin-top: 2rem; font-family: var(--font-poem); font-size: 1.2rem; line-height: 1.65; }
+      .seo-poem__text p { margin: 0 0 1.25rem; }
+    </style>
+    <main class="seo-poem">
+      <a class="seo-poem__back" href="/">Все стихотворения</a>
+      <article>
+        <h1>За много дней</h1>
+        <time datetime="27.12.2015">27.12.2015</time>
+        <div class="seo-poem__text"><p>За много дней запомнилось молчанье,<br>
 И пара слез, фальшивых, может быть,<br>
 Часов старинных черное стучанье,<br>
 И пылесос, и запыленный быт.</p>
@@ -37,7 +53,96 @@
 И мимо пролетевшая эпоха<br>
 Оставила лишь пыль поверх зеркал.</p>
 <p>2011+/-</p></div>
-    </article>
+      </article>
+    </main>
+  </noscript>
+
+  <!-- Полноценный интерфейс сайта: скрыт до появления класса "js" на <html> -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <button class="search-icon-btn" id="searchIconBtn" aria-label="Поиск">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+      </button>
+      <span class="author-name">Алексей Захарчук</span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <aside class="sidebar" id="sidebar" aria-label="Список стихотворений">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">Стихи</h2>
+        <span class="author-name">Алексей Захарчук</span>
+        <button class="search-icon-btn mobile-search-btn" id="searchIconBtnMobile" aria-label="Поиск">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <circle cx="6.5" cy="6.5" r="5"/>
+            <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+          </svg>
+        </button>
+        <div class="sidebar-divider" aria-hidden="true"></div>
+      </div>
+      <nav class="poem-list" id="poemList" role="navigation" aria-label="Стихотворения">
+        <div class="poem-list-loading">Загрузка…</div>
+      </nav>
+      <footer class="site-footer" id="siteFooter">
+        <span id="copyrightYear"></span> Алексей Захарчук. Все права защищены.
+      </footer>
+    </aside>
+
+    <section class="content-panel" id="contentPanel" aria-live="polite" aria-label="Текст стихотворения">
+      <button class="search-icon-btn poem-search-btn" id="searchIconBtnPoem" aria-label="Поиск">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+      </button>
+
+      <button class="back-to-list-btn" id="backToListBtn" aria-label="Назад к списку стихотворений">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12 19 5 12 12 5"/>
+        </svg>
+      </button>
+
+      <div class="pull-indicator" id="pullIndicator" aria-hidden="true"></div>
+
+      <div class="poem-display" id="poemDisplay">
+        <div class="poem-loading">Загрузка…</div>
+      </div>
+    </section>
+
   </main>
+
+  <footer class="site-footer site-footer-desktop" id="siteFooterDesktop">
+    <span id="copyrightYearDesktop"></span> Алексей Захарчук. Все права защищены.
+  </footer>
+
+  <div class="search-overlay" id="searchOverlay" aria-hidden="true">
+    <div class="search-panel" id="searchPanel" role="dialog" aria-label="Поиск по стихотворениям">
+      <div class="search-input-row">
+        <svg class="search-input-icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+          <circle cx="6.5" cy="6.5" r="5"/>
+          <line x1="10.5" y1="10.5" x2="15" y2="15"/>
+        </svg>
+        <input
+          type="search"
+          class="search-input"
+          id="searchInput"
+          placeholder="Поиск по стихотворениям…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="search-close-btn" id="searchCloseBtn" aria-label="Закрыть поиск">✕</button>
+      </div>
+      <div class="search-history" id="searchHistory"></div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <script>window.__POEM_PRERENDER__ = {"slug": "za-mnogo-dney", "title": "За много дней", "date": "27.12.2015", "body": "За много дней запомнилось молчанье,\nИ пара слез, фальшивых, может быть,\nЧасов старинных черное стучанье,\nИ пылесос, и запыленный быт.\n\nЯ в ванной пел, и пел весьма неплохо,\nИ душ паршивый всюду протекал.\nИ мимо пролетевшая эпоха\nОставила лишь пыль поверх зеркал.\n\n\n\n\n\n\n\n2011+/-"};</script>
+  <script src="/main.js"></script>
 </body>
 </html>
