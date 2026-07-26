@@ -49,7 +49,7 @@ function parsePoemText(raw) {
   return raw.split(/\n{2,}/)
     .map(s => {
       const lines = s.trim().split('\n').map(l => l.trimEnd()).filter(Boolean);
-      return lines.length ? '<p>' + lines.join('<br>') + '</p>' : '';
+      return lines.length ? '<p>' + lines.map(escHtml).join('<br>') + '</p>' : '';
     })
     .filter(Boolean)
     .join('\n');
@@ -127,11 +127,23 @@ async function loadIndex() {
     poems = await res.json();
     renderList();
 
-    const hash = location.hash.replace('#', '');
-    if (hash && poems.find(p => p.slug === hash)) {
-      /* Старые ссылки вида /#slug переводим на индексируемый постоянный адрес. */
-      history.replaceState({ slug: hash }, '', '/' + hash + '/');
-      openPoem(hash, false);
+    /* Страница открыта напрямую как /slug/ (обновление, прямая ссылка, переход из поисковика):
+       generate-seo.py вкладывает данные о стихотворении в window.__POEM_PRERENDER__,
+       чтобы не делать лишний fetch и сразу открыть нужное стихотворение в полном интерфейсе. */
+    const prerendered = window.__POEM_PRERENDER__;
+    if (prerendered && prerendered.slug) {
+      const { slug, title, date, body } = prerendered;
+      const lines = body.split('\n').map(l => l.trim()).filter(Boolean);
+      poemCache[slug] = { title, date, body, lines };
+      history.replaceState({ slug }, '', '/' + slug + '/');
+      openPoem(slug, false);
+    } else {
+      const hash = location.hash.replace('#', '');
+      if (hash && poems.find(p => p.slug === hash)) {
+        /* Старые ссылки вида /#slug переводим на индексируемый постоянный адрес. */
+        history.replaceState({ slug: hash }, '', '/' + hash + '/');
+        openPoem(hash, false);
+      }
     }
 
     /* Начать фоновую индексацию */
