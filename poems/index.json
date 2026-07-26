@@ -1,5 +1,9 @@
 [
   {
+    "slug": "test2",
+    "title": "тест2"
+  },
+  {
     "slug": "tolko-zvuk",
     "title": "Только звук"
   },
