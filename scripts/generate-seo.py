@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 BASE_URL = "https://zaharchuk-stihi.pages.dev"
+OG_IMAGE_URL = "https://zaharchuk-stihi.pages.dev/images/cover.png"
 ROOT = Path(__file__).resolve().parents[1]
 POEMS_DIR = ROOT / "poems"
 MANIFEST = ROOT / ".seo-pages.json"
@@ -95,6 +96,13 @@ def page_html(poem: dict[str, str | bool]) -> str:
   <meta property="og:title" content="{title} - Алексей Захарчук">
   <meta property="og:description" content="{html.escape(description(poem), quote=True)}">
   <meta property="og:url" content="{canonical}">
+  <meta property="og:image" content="{OG_IMAGE_URL}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title} - Алексей Захарчук">
+  <meta name="twitter:description" content="{html.escape(description(poem), quote=True)}">
+  <meta name="twitter:image" content="{OG_IMAGE_URL}">
   <link rel="stylesheet" href="/style.css">
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
