@@ -590,15 +590,6 @@ function syncSidebarScroll(slug) {
   if (item) item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
 
-contentPanel.addEventListener('scroll', () => {
-  if (isMobile() || !poems.length) return;
-  const ratio = contentPanel.scrollTop /
-    (contentPanel.scrollHeight - contentPanel.clientHeight || 1);
-  const idx = Math.round(ratio * (poems.length - 1));
-  const slug = poems[idx]?.slug;
-  if (slug) syncSidebarScroll(slug);
-});
-
 /* Возврат к списку (мобильный) */
 function showList() {
   if (activeSlug && openedAt && (Date.now() - openedAt >= VISITED_MS)) {
