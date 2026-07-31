@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Страница не найдена — Алексей Захарчук</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body { height: auto; min-height: 100vh; overflow: auto; }
+    .seo-poem { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem; text-align: center; }
+    .seo-poem__back { color: var(--gold); text-decoration: none; }
+    .not-found-code {
+      margin: 2.5rem 0 0.4rem;
+      color: var(--gold-bright);
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 4.5rem;
+      letter-spacing: 0.06em;
+    }
+    .not-found-lead {
+      font-family: var(--font-poem);
+      font-size: 1.2rem;
+      line-height: 1.65;
+      color: var(--text-poem);
+      margin: 0 0 2.5rem;
+    }
+    .not-found-suggestions {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .not-found-suggestions-title {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+    .not-found-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .not-found-list a {
+      font-family: var(--font-poem);
+      font-size: 1.05rem;
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .not-found-list a:hover {
+      color: var(--gold-bright);
+    }
+  </style>
+</head>
+<body>
+  <div class="light-source" aria-hidden="true"></div>
+  <main class="seo-poem">
+    <p class="not-found-code">404</p>
+    <p class="not-found-lead">
+      Здесь ничего нет. Хотя, ничто — это тоже что-то.<br>
+      Возможно, ссылка устарела или в адресе опечатка.
+    </p>
+    <a class="seo-poem__back" href="/">Все стихотворения</a>
+
+    <div class="not-found-suggestions" id="suggestions" hidden>
+      <div class="not-found-suggestions-title">Пока вы здесь</div>
+      <ul class="not-found-list" id="suggestionsList"></ul>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      function escHtml(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      fetch('/poems/index.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error('index.json not found');
+          return res.json();
+        })
+        .then(function (poems) {
+          if (!Array.isArray(poems) || !poems.length) return;
+
+          var shuffled = poems.slice();
+          for (var i = shuffled.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = shuffled[i];
+            shuffled[i] = shuffled[j];
+            shuffled[j] = tmp;
+          }
+
+          var picks = shuffled.slice(0, 3);
+          var list = document.getElementById('suggestionsList');
+          picks.forEach(function (p) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = '/' + p.slug + '/';
+            a.innerHTML = escHtml(p.title);
+            li.appendChild(a);
+            list.appendChild(li);
+          });
+
+          document.getElementById('suggestions').hidden = false;
+        })
+        .catch(function () {
+          /* Если не удалось загрузить список — просто не показываем блок */
+        });
+    })();
+  </script>
+</body>
+</html>
